@@ -1,0 +1,832 @@
+---
+// src/pages/recipe/[slug].astro
+//
+// Recipe detail page — renders any recipe from Tina/Astro content collection.
+// Drop this file at src/pages/recipe/[slug].astro in your Astro project.
+// The bracket syntax makes it a dynamic route: /recipe/grandmas-sunday-ragu
+// resolves to this page with `slug = "grandmas-sunday-ragu"`.
+//
+// Layout matches the DishSwapp Brand Book v2.0 §17 recipe detail mockup:
+//   1. Full-bleed hero image with gradient scrim + title overlay
+//   2. Two-column body: Ingredients (left, ~40%) + Method (right, ~60%)
+//   3. TIP callout under the ingredients list (uses first step's tip)
+//   4. Sticky dark-teal bottom bar with engagement stats + Save / Start cooking CTAs
+//
+// ── DATA ──────────────────────────────────────────────────────────
+// In production, uncomment the production block below. It uses Astro's
+// getStaticPaths + getCollection to render one page per recipe MDX file
+// in src/content/recipes/.
+//
+// The hardcoded sample recipe below lets the page render standalone
+// (e.g. for design preview) without needing the content collection set up.
+
+import type { CollectionEntry } from "astro:content";
+
+// ── PRODUCTION DATA FETCHING (uncomment when content collections are wired) ──
+//
+// import { getCollection, reference } from "astro:content";
+//
+// export async function getStaticPaths() {
+//   const recipes = await getCollection("recipes", ({ data }) =>
+//     !data.isDraft && data.isPublic
+//   );
+//   return recipes.map((recipe) => ({
+//     params: { slug: recipe.slug },
+//     props: { recipe },
+//   }));
+// }
+//
+// interface Props { recipe: CollectionEntry<"recipes"> }
+// const { recipe } = Astro.props;
+// const { Content } = await recipe.render();
+//
+// // Resolve author + cuisines references
+// const author = await reference("author", recipe.data.author).fetch();
+// const cuisines = await Promise.all(
+//   recipe.data.cuisines.map((c) => reference("cuisine", c).fetch())
+// );
+//
+// const heroImage = recipe.data.heroImage
+//   ? (await reference("mediaAsset", recipe.data.heroImage).fetch())
+//   : (await reference("mediaAsset", recipe.data.coverImage).fetch());
+//
+// const coverImage = await reference("mediaAsset", recipe.data.coverImage).fetch();
+//
+// // First step that has a tip — promoted to the TIP callout under ingredients
+// const tipStep = recipe.data.steps.find((s) => s.tip);
+// ---------------------------------------------------------------------------
+
+// ── DEMO / PREVIEW MODE (hardcoded sample — grandma's ragù) ──
+// Comment this block out when you uncomment the production block above.
+
+interface Ingredient { id: string; name: string; quantity?: number; unit?: string; note?: string; }
+interface Step        { id: string; instruction: string; tip?: string; timerSeconds?: number; }
+interface RecipeData {
+  title: string;
+  description: string;
+  author: { handle: string; displayName: string; };
+  cuisines: { slug: string; name: string }[];
+  difficulty: { slug: string; name: string };
+  prepTimeMinutes: number;
+  cookTimeMinutes: number;
+  totalTimeMinutes: number;
+  servings: number;
+  coverImage: { src: string; alt: string; };
+  heroImage: { src: string; alt: string; };
+  ingredients: Ingredient[];
+  steps: Step[];
+  updatedAt: string;       // ISO date
+  swapsCount: number;
+  commentsCount: number;
+  ratingAvg: number;
+  ratingCount: number;
+}
+
+const recipe: { slug: string; data: RecipeData } = {
+  slug: "grandmas-sunday-ragu",
+  data: {
+    title: "Grandma's Sunday ragù",
+    description: "The slow-cooked Bolognese that survived three generations.",
+    author: { handle: "patrizio", displayName: "Patrizio" },
+    cuisines: [{ slug: "italian", name: "Italian" }],
+    difficulty: { slug: "intermediate", name: "Intermediate" },
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 240,
+    totalTimeMinutes: 255,
+    servings: 6,
+    coverImage: {
+      // Replace with the real cover image path from the MediaAsset collection.
+      // Using a warm food-photo placeholder for demo.
+      src: "https://images.unsplash.com/photo-1606914469633-673eeb1e5a39?w=1600&h=1000&fit=crop&auto=format&q=80",
+      alt: "A deep red ragù in a wide Dutch oven, garnished with fresh tagliatelle.",
+    },
+    heroImage: {
+      src: "https://images.unsplash.com/photo-1606914469633-673eeb1e5a39?w=1920&h=1080&fit=crop&auto=format&q=80",
+      alt: "A deep red ragù in a wide Dutch oven, garnished with fresh tagliatelle.",
+    },
+    ingredients: [
+      { id: "ing-01", name: "beef chuck",        quantity: 400, unit: "g",  note: "finely diced, not ground" },
+      { id: "ing-02", name: "pork shoulder",     quantity: 200, unit: "g",  note: "finely diced" },
+      { id: "ing-03", name: "onion",             quantity: 1,   unit: "",   note: "finely diced" },
+      { id: "ing-04", name: "carrots",           quantity: 2,   unit: "",   note: "finely diced" },
+      { id: "ing-05", name: "whole milk",        quantity: 120, unit: "ml" },
+      { id: "ing-06", name: "dry white wine",    quantity: 200, unit: "ml" },
+      { id: "ing-07", name: "canned tomatoes",   quantity: 400, unit: "g",  note: "San Marzano if you can" },
+    ],
+    steps: [
+      { id: "step-01", instruction: "Sweat the soffritto in olive oil until translucent, about 7 minutes. Don't brown.", tip: "The milk softens the meat. Don't skip it — it's the trick everyone asks about.", timerSeconds: 420 },
+      { id: "step-02", instruction: "Add the diced meat, brown on all sides. Season with salt and a fine grate of nutmeg." },
+      { id: "step-03", instruction: "Pour in the milk and let it reduce until almost gone. This takes patience — 15 min." },
+      { id: "step-04", instruction: "Add the wine and reduce by half. Then the tomatoes, a pinch of sugar, and the lowest possible heat." },
+      { id: "step-05", instruction: "Cook at a bare simmer for 3–4 hours. Stir occasionally. Toss with fresh tagliatelle." },
+    ],
+    updatedAt: "2026-11-05T09:00:00Z",
+    swapsCount: 3,
+    commentsCount: 12,
+    ratingAvg: 4.8,
+    ratingCount: 142,
+  },
+};
+// ---------------------------------------------------------------------------
+
+const data = recipe.data;
+
+// Derived display values
+const metaLine = [
+  data.cuisines.map((c) => c.name).join(", "),
+  `${data.totalTimeMinutes} min`,
+  `Serves ${data.servings}`,
+].join(" · ");
+
+// "updated 3 days ago" — relative time formatter
+function relativeTime(iso: string): string {
+  const then = new Date(iso).getTime();
+  const now = Date.now();
+  const days = Math.floor((now - then) / 86_400_000);
+  if (days === 0) return "updated today";
+  if (days === 1) return "updated yesterday";
+  if (days < 7) return `updated ${days} days ago`;
+  if (days < 30) return `updated ${Math.floor(days / 7)} weeks ago`;
+  return `updated ${Math.floor(days / 30)} months ago`;
+}
+
+const byline = `by ${data.author.displayName} · ${relativeTime(data.updatedAt)} · ${data.ratingCount} cooks tried this`;
+
+// First step that has a tip — promoted to the TIP callout under ingredients
+const tipStep = data.steps.find((s) => s.tip);
+
+const pageTitle = `${data.title} — DishSwapp`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+
+  <!-- Bootstrap 5.3 (Brand Book §19) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Brand fonts: Playfair Display, Inter, JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:title" content={data.title} />
+  <meta property="og:description" content={data.description} />
+  <meta property="og:image" content={data.heroImage.src} />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+
+<body>
+
+<!-- ──────────────────────────────────────────────────────────────
+     HERO — full-bleed image with gradient scrim + title overlay
+     ────────────────────────────────────────────────────────────── -->
+<header class="recipe-hero">
+  <img src={data.heroImage.src} alt={data.heroImage.alt} class="hero-img" />
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="eyebrow-light">{metaLine}</div>
+    <h1 class="hero-title">{data.title}</h1>
+    <div class="hero-byline">{byline}</div>
+  </div>
+</header>
+
+<!-- ──────────────────────────────────────────────────────────────
+     BODY — two-column: Ingredients (left) + Method (right)
+     ────────────────────────────────────────────────────────────── -->
+<main class="recipe-body">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- LEFT COLUMN — Ingredients + TIP callout -->
+      <section class="col-lg-5">
+        <h2 class="section-eyebrow">Ingredients</h2>
+        <ul class="ingredient-list">
+          {data.ingredients.map((ing) => (
+            <li class="ingredient-row" data-id={ing.id}>
+              <label class="ingredient-label">
+                <input type="checkbox" class="ingredient-check" />
+                <span class="quantity">{ing.quantity}{ing.unit ? ` ${ing.unit}` : ""}</span>
+                <span class="name">{ing.name}{ing.note ? <em class="note">, {ing.note}</em> : null}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+
+        {tipStep && tipStep.tip && (
+          <aside class="tip-callout">
+            <div class="tip-label">Tip</div>
+            <p class="tip-text">{tipStep.tip}</p>
+          </aside>
+        )}
+      </section>
+
+      <!-- RIGHT COLUMN — Method steps -->
+      <section class="col-lg-7">
+        <h2 class="section-eyebrow">Method</h2>
+        <ol class="step-list">
+          {data.steps.map((step, i) => (
+            <li class="step-row">
+              <span class="step-num">{i + 1}</span>
+              <div class="step-body">
+                <p class="step-text">{step.instruction}</p>
+                {step.tip && (
+                  <p class="step-tip-inline">{step.tip}</p>
+                )}
+                {step.timerSeconds && step.timerSeconds > 0 && (
+                  <button
+                    type="button"
+                    class="timer-btn"
+                    data-seconds={step.timerSeconds}
+                    aria-label={`Start ${Math.floor(step.timerSeconds / 60)} minute timer`}
+                  >
+                    <i class="bi bi-clock"></i>
+                    Start {Math.floor(step.timerSeconds / 60)}:{String(step.timerSeconds % 60).padStart(2, "0")} timer
+                  </button>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- Spacer so content isn't hidden behind the sticky bottom bar -->
+<div class="sticky-spacer"></div>
+
+<!-- ──────────────────────────────────────────────────────────────
+     STICKY BOTTOM BAR — dark teal, stats + Save / Start cooking
+     ────────────────────────────────────────────────────────────── -->
+<footer class="recipe-actions">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between py-3">
+
+      <div class="action-stats">
+        {data.ratingCount} cooks tried this
+        <span class="dot">·</span>
+        {data.commentsCount} comments
+        <span class="dot">·</span>
+        {data.swapsCount} swaps
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="button" class="btn-save" id="saveBtn">
+          <i class="bi bi-bookmark"></i>
+          <span class="save-label">Save</span>
+        </button>
+        <button type="button" class="btn-cook" id="cookBtn">
+          Start cooking
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS bundle -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Page logic — is:inline so Astro emits it verbatim -->
+<script is:inline>
+  (function () {
+    'use strict';
+
+    // ─────────────────────────────────────────────────────────────
+    // 1. Save button — toggles "saved" state, persists to localStorage
+    // ─────────────────────────────────────────────────────────────
+    var saveBtn = document.getElementById('saveBtn');
+    var slug = window.location.pathname.split('/').filter(Boolean).pop();
+    var storageKey = 'dishswapp:saved:' + slug;
+
+    function refreshSaveState() {
+      var isSaved = localStorage.getItem(storageKey) === '1';
+      saveBtn.classList.toggle('saved', isSaved);
+      saveBtn.querySelector('.save-label').textContent = isSaved ? 'Saved' : 'Save';
+    }
+    refreshSaveState();
+
+    saveBtn.addEventListener('click', function () {
+      var isSaved = localStorage.getItem(storageKey) === '1';
+      if (isSaved) {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, '1');
+      }
+      refreshSaveState();
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // 2. Ingredient checkboxes — persist state per slug
+    // ─────────────────────────────────────────────────────────────
+    var checks = document.querySelectorAll('.ingredient-check');
+    var checkKey = 'dishswapp:checks:' + slug;
+
+    function loadChecks() {
+      try {
+        var saved = JSON.parse(localStorage.getItem(checkKey) || '{}');
+        checks.forEach(function (cb) {
+          var id = cb.closest('.ingredient-row').getAttribute('data-id');
+          cb.checked = !!saved[id];
+          cb.closest('.ingredient-label').classList.toggle('checked', cb.checked);
+        });
+      } catch (e) {}
+    }
+    loadChecks();
+
+    checks.forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var saved = {};
+        try { saved = JSON.parse(localStorage.getItem(checkKey) || '{}'); } catch (e) {}
+        checks.forEach(function (c) {
+          var id = c.closest('.ingredient-row').getAttribute('data-id');
+          saved[id] = c.checked;
+          c.closest('.ingredient-label').classList.toggle('checked', c.checked);
+        });
+        localStorage.setItem(checkKey, JSON.stringify(saved));
+      });
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // 3. Timer buttons — count down in a toast, beep when done
+    // ─────────────────────────────────────────────────────────────
+    var timerBtns = document.querySelectorAll('.timer-btn');
+    timerBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var seconds = parseInt(btn.getAttribute('data-seconds'), 10);
+        startTimer(seconds, btn);
+      });
+    });
+
+    var activeTimers = {};
+    function startTimer(seconds, btn) {
+      // Replace button label with a live countdown
+      var remaining = seconds;
+      btn.disabled = true;
+      btn.classList.add('running');
+      function tick() {
+        if (remaining <= 0) {
+          btn.disabled = false;
+          btn.classList.remove('running');
+          btn.innerHTML = '<i class="bi bi-check-lg"></i> Done!';
+          if ('speechSynthesis' in window) {
+            try { window.speechSynthesis.speak(new SpeechSynthesisUtterance('Timer done.')); } catch (e) {}
+          }
+          return;
+        }
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> ' + m + ':' + (s < 10 ? '0' + s : s);
+        remaining--;
+      }
+      tick();
+      activeTimers[btn.getAttribute('data-seconds')] = setInterval(tick, 1000);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 4. "Start cooking" CTA — scroll to first step + activate cook mode
+    // ─────────────────────────────────────────────────────────────
+    var cookBtn = document.getElementById('cookBtn');
+    var firstStep = document.querySelector('.step-row');
+    if (cookBtn && firstStep) {
+      cookBtn.addEventListener('click', function () {
+        firstStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstStep.classList.add('active');
+        setTimeout(function () { firstStep.classList.remove('active'); }, 2000);
+      });
+    }
+  })();
+</script>
+
+<style is:global>
+  /* ───────────────────────────────────────────────────────────────
+     DishSwapp brand tokens — verbatim from Brand Book v2.0 §19
+     (Same block as submit.astro; move to src/styles/tokens.css
+     once a global stylesheet exists.)
+     ─────────────────────────────────────────────────────────────── */
+  :root {
+    --ds-teal:        #3D717C;
+    --ds-teal-dark:   #2A535C;
+    --ds-teal-light:  #5A8E97;
+    --ds-teal-tint:   #E5EDEF;
+    --ds-pink:        #F9B7A4;
+    --ds-pink-soft:   #FCE6DD;
+    --ds-spice:       #E07A3B;
+    --ds-spice-soft:  #F6E0CB;
+    --ds-cream:       #FBF7F1;
+    --ds-oat:         #EFE5D4;
+    --ds-ink:         #2C2A28;
+    --ds-muted:       #6B6661;
+    --ds-border:      #E5DDD0;
+
+    --ds-font-serif:  'Playfair Display', Georgia, serif;
+    --ds-font-sans:   'Inter', system-ui, sans-serif;
+    --ds-font-mono:   'JetBrains Mono', ui-monospace, monospace;
+
+    --ds-r-sm:   4px;
+    --ds-r-md:   10px;
+    --ds-r-lg:   18px;
+    --ds-r-pill: 999px;
+
+    --ds-shadow-sm: 0 1px 2px rgba(44,42,40,0.06);
+    --ds-shadow-md: 0 4px 12px rgba(44,42,40,0.08);
+    --ds-shadow-lg: 0 12px 32px rgba(44,42,40,0.12);
+
+    --sticky-bar-h: 68px;
+  }
+
+  body {
+    background: var(--ds-cream);
+    color: var(--ds-ink);
+    font-family: var(--ds-font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     HERO — full-bleed image with gradient scrim + title overlay
+     ────────────────────────────────────────────────────────────── */
+  .recipe-hero {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    min-height: 420px;
+    max-height: 640px;
+    overflow: hidden;
+  }
+  .hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(44,42,40,0.05) 0%,
+      rgba(44,42,40,0.05) 40%,
+      rgba(44,42,40,0.55) 75%,
+      rgba(44,42,40,0.85) 100%
+    );
+  }
+  .hero-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 32px 48px 40px;
+    color: #fff;
+    max-width: 920px;
+  }
+  .eyebrow-light {
+    font-family: var(--ds-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ds-pink);
+    margin-bottom: 10px;
+    opacity: 0.95;
+  }
+  .hero-title {
+    font-family: var(--ds-font-serif);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.05;
+    margin: 0 0 12px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .hero-byline {
+    font-family: var(--ds-font-mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.2px;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     BODY — two-column layout
+     ────────────────────────────────────────────────────────────── */
+  .recipe-body {
+    padding: 56px 0 32px;
+  }
+  .section-eyebrow {
+    font-family: var(--ds-font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ds-teal);
+    margin: 0 0 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ds-border);
+  }
+
+  /* ── Ingredients list — quantities in tnum column, dashed dividers ── */
+  .ingredient-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ingredient-row {
+    border-bottom: 1px dashed var(--ds-border);
+    padding: 0;
+  }
+  .ingredient-row:first-child {
+    border-top: 1px dashed var(--ds-border);
+  }
+  .ingredient-label {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 11px 4px;
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+    transition: color 0.15s;
+  }
+  .ingredient-check {
+    flex: 0 0 auto;
+    margin: 0 4px 0 0;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--ds-teal);
+    cursor: pointer;
+    align-self: center;
+  }
+  .quantity {
+    flex: 0 0 88px;
+    font-family: var(--ds-font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ds-teal-dark);
+    font-feature-settings: 'tnum' 1;
+    text-align: right;
+  }
+  .name {
+    flex: 1 1 auto;
+    font-size: 15px;
+    color: var(--ds-ink);
+    line-height: 1.5;
+  }
+  .name .note {
+    color: var(--ds-muted);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 13px;
+  }
+  .ingredient-label.checked .name {
+    text-decoration: line-through;
+    color: var(--ds-muted);
+  }
+  .ingredient-label.checked .quantity {
+    color: var(--ds-muted);
+  }
+
+  /* ── TIP callout — oat bg, spice label, spice left border ── */
+  .tip-callout {
+    background: var(--ds-oat);
+    border-left: 3px solid var(--ds-spice);
+    border-radius: 0 var(--ds-r-md) var(--ds-r-md) 0;
+    padding: 16px 18px;
+    margin-top: 28px;
+  }
+  .tip-label {
+    font-family: var(--ds-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ds-spice);
+    margin-bottom: 6px;
+  }
+  .tip-text {
+    font-family: var(--ds-font-serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ds-ink);
+    margin: 0;
+  }
+
+  /* ── Method steps — numbered teal badges ── */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: step;
+  }
+  .step-row {
+    display: flex;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--ds-border);
+    transition: background 0.3s;
+  }
+  .step-row:first-child {
+    padding-top: 0;
+  }
+  .step-row:last-child {
+    border-bottom: none;
+  }
+  .step-row.active {
+    background: var(--ds-teal-tint);
+    border-radius: var(--ds-r-md);
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .step-num {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    background: var(--ds-teal);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ds-font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .step-body {
+    flex: 1 1 auto;
+  }
+  .step-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ds-ink);
+    margin: 0 0 6px;
+  }
+  .step-tip-inline {
+    font-family: var(--ds-font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ds-muted);
+    margin: 6px 0 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--ds-spice);
+  }
+  .timer-btn {
+    margin-top: 10px;
+    background: var(--ds-teal-tint);
+    border: 1px solid var(--ds-teal);
+    color: var(--ds-teal-dark);
+    font-family: var(--ds-font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: var(--ds-r-pill);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .timer-btn:hover {
+    background: var(--ds-teal);
+    color: #fff;
+  }
+  .timer-btn.running {
+    background: var(--ds-spice-soft);
+    border-color: var(--ds-spice);
+    color: var(--ds-spice);
+  }
+  .timer-btn:disabled {
+    cursor: default;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     STICKY BOTTOM BAR — dark teal, stats + CTAs
+     ────────────────────────────────────────────────────────────── */
+  .sticky-spacer {
+    height: var(--sticky-bar-h);
+  }
+  .recipe-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--ds-teal-dark);
+    color: #fff;
+    z-index: 1030;
+    box-shadow: 0 -4px 16px rgba(44,42,40,0.12);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .action-stats {
+    font-family: var(--ds-font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.88);
+    letter-spacing: 0.3px;
+  }
+  .action-stats .dot {
+    margin: 0 8px;
+    opacity: 0.5;
+  }
+
+  /* Save button — ghost style on teal bg */
+  .btn-save {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: var(--ds-r-pill);
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-save:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .btn-save.saved {
+    background: var(--ds-pink);
+    color: var(--ds-ink);
+    border-color: var(--ds-pink);
+  }
+
+  /* Start cooking — spice CTA, one per page per Brand Book §10 */
+  .btn-cook {
+    background: var(--ds-spice);
+    color: #fff;
+    border: none;
+    border-radius: var(--ds-r-pill);
+    padding: 9px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-cook:hover {
+    background: #C76A35;
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-md);
+  }
+  .btn-cook i {
+    font-size: 14px;
+  }
+
+  /* ──────────────────────────────────────────────────────────────
+     RESPONSIVE
+     ────────────────────────────────────────────────────────────── */
+  @media (max-width: 991px) {
+    .hero-content { padding: 24px 24px 28px; }
+    .recipe-body  { padding: 40px 0 24px; }
+    .ingredient-list { margin-bottom: 8px; }
+  }
+  @media (max-width: 575px) {
+    .recipe-hero {
+      height: 50vh;
+      min-height: 320px;
+    }
+    .hero-content { padding: 20px 18px 22px; }
+    .hero-title { font-size: 28px; }
+    .eyebrow-light { font-size: 10px; letter-spacing: 2px; }
+    .hero-byline { font-size: 11px; }
+
+    .action-stats {
+      font-size: 11px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .action-stats .dot { margin: 0 4px; }
+
+    .btn-save, .btn-cook {
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+    .btn-cook { padding: 8px 18px; }
+
+    .quantity { flex-basis: 64px; font-size: 13px; }
+    .name     { font-size: 14px; }
+    .step-text { font-size: 15px; }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+      flex-basis: 28px;
+    }
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+---
+/**
+ * DishSwapp · About section
+ * -------------------------------------------------------------
+ * Brand-book compliant (Brand Book v2.0 · Nov 2026).
+ * Tokens: peachy-pink #F9B7A4, deep teal #3D717C, spice #E07A3B,
+ *         cream #FBF7F1, oat #EFE5D4, ink #2C2A28.
+ * Type:   Playfair Display (display) · Inter (UI/body) ·
+ *         JetBrains Mono (eyebrow / numeric).
+ * Voice:  warm, generous, real, helpful.
+ *
+ * Usage in any Astro page:
+ *   import About from '../components/About.astro';
+ *   <About />
+ * -------------------------------------------------------------
+ */
+
+interface Props {
+  /** Optional id for in-page anchors. */
+  id?: string;
+}
+
+const { id = 'about' } = Astro.props;
+
+// Eyebrow + numeric markers use JetBrains Mono, tracked, uppercase.
+const eyebrow = 'About DishSwapp';
+
+// The four community beats from the source copy, lifted into structured
+// data so the markup stays clean and the voice stays even.
+const beats: { kicker: string; body: string }[] = [
+  {
+    kicker: 'More than a collection',
+    body: `Unlike other recipe websites, DishSwapp lets you do more than browse. Comment on a step that didn't quite work. Add your own recipes to the mix. We know how frustrating it is when a recipe flops, or when you want to put your own twist on one and can't. With DishSwapp, that frustration is a thing of the past.`,
+  },
+  {
+    kicker: 'Show the plate, not just the recipe',
+    body: `We don't stop at text. Food is about presentation, too — so we let you post pictures of your attempt under each recipe. Share your wins, your tips and tricks, and the moments that didn't quite land. Cook a meal and it becomes part of you; we're here to celebrate that.`,
+  },
+  {
+    kicker: 'A community, not a website',
+    body: `At DishSwapp, we value collaboration. Cooking shouldn't be solitary — it should bring people together. Engage with others, share what you know, learn from what they know. Join DishSwapp and you're not joining a website — you're joining a community of food lovers passionate about sharing the food they love.`,
+  },
+];
+---
+
+<section id={id} class="about" aria-labelledby="about-title">
+  <div class="about__inner">
+    <!-- Eyebrow / label · JetBrains Mono · uppercase tracked -->
+    <p class="about__eyebrow">{eyebrow}</p>
+
+    <!-- Display headline · Playfair 700 · one H1 per page -->
+    <h1 id="about-title" class="about__title">
+      Welcome to <span class="about__title-accent">DishSwapp</span>
+    </h1>
+
+    <!-- Lead paragraph · Inter 17/28, 1.65 -->
+    <p class="about__lead">
+      We believe that food is more than just sustenance; it's an experience
+      that brings people together. That's why we created DishSwapp — a
+      platform where food lovers can come together, share their recipes, and
+      try out new ones.
+    </p>
+
+    <!-- Three community beats · homey, generous voice -->
+    <div class="about__beats">
+      {beats.map((beat) => (
+        <article class="beat">
+          <h2 class="beat__kicker">{beat.kicker}</h2>
+          <p class="beat__body">{beat.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <!-- Values band · teal-dark surface, pink wordmark accent · the "we mean it" color -->
+    <aside class="about__values" aria-label="What DishSwapp stands for">
+      <p class="about__values-eyebrow">What we stand for</p>
+      <ul class="values">
+        <li class="values__item">
+          <span class="values__word">Open</span>
+          <span class="values__gloss">Source, content and roadmap are public. We default to sharing.</span>
+        </li>
+        <li class="values__item">
+          <span class="values__word">Collaborative</span>
+          <span class="values__gloss">Recipes are improved in public. Forks, comments and history are first-class.</span>
+        </li>
+        <li class="values__item">
+          <span class="values__word">Curious</span>
+          <span class="values__gloss">Every cuisine, diet and skill level is equally worth exploring.</span>
+        </li>
+        <li class="values__item">
+          <span class="values__word">Generous</span>
+          <span class="values__gloss">We credit, we link back, we assume good faith. A gift, not a funnel.</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Closing tagline · the original three-word tagline stays primary -->
+    <p class="about__tagline">Collect, Collaborate, Cook.</p>
+  </div>
+</section>
+
+<style>
+  /* ----------------------------------------------------------------
+   * Brand tokens — scoped copy of tokens.css (Brand Book §19).
+   * In a real Astro project these live in src/styles/tokens.css and
+   * are NOT redefined here; kept inline so this component is portable.
+   * ---------------------------------------------------------------- */
+  .about {
+    --ds-teal: #3d717c;
+    --ds-teal-dark: #2a535c;
+    --ds-pink: #f9b7a4;
+    --ds-spice: #e07a3b;
+    --ds-cream: #fbf7f1;
+    --ds-oat: #efe5d4;
+    --ds-ink: #2c2a28;
+    --ds-muted: #6b6661;
+    --ds-border: #e5ddd0;
+
+    --ds-font-serif: 'Playfair Display', Georgia, serif;
+    --ds-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --ds-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    --ds-r-md: 10px;
+    --ds-r-lg: 18px;
+    --ds-shadow-sm: 0 1px 2px rgba(44, 42, 40, 0.06);
+    --ds-shadow-md: 0 4px 12px rgba(44, 42, 40, 0.08);
+
+    /* 60 / 30 / 10 — cream is the canvas. */
+    background: var(--ds-cream);
+    color: var(--ds-ink);
+    font-family: var(--ds-font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    padding: clamp(3rem, 8vw, 6rem) 1rem;
+  }
+
+  .about__inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Eyebrow · mono · uppercase · tracked */
+  .about__eyebrow {
+    font-family: var(--ds-font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ds-spice);
+    margin: 0 0 1.25rem;
+  }
+
+  /* H1 · Playfair 700 · 48 / 56 · one per page */
+  .about__title {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ds-ink);
+    margin: 0 0 1.5rem;
+  }
+
+  /* The "Swapp" in the wordmark is peachy-pink — same accent rule. */
+  .about__title-accent {
+    color: var(--ds-pink);
+  }
+
+  /* Lead · Inter 17 / 28 · 1.65 */
+  .about__lead {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--ds-ink);
+    margin: 0 0 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--ds-border);
+  }
+
+  /* Beats stack — three short essays in homey voice. */
+  .about__beats {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .beat__kicker {
+    /* H3 · Playfair 600 · 22 / 28 */
+    font-family: var(--ds-font-serif);
+    font-weight: 600;
+    font-size: 1.375rem;
+    line-height: 1.2;
+    color: var(--ds-teal);
+    margin: 0 0 0.625rem;
+  }
+
+  .beat__body {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ds-ink);
+    margin: 0;
+  }
+
+  /* Values band · teal-dark surface · the "we mean it" color */
+  .about__values {
+    background: var(--ds-teal-dark);
+    color: var(--ds-cream);
+    border-radius: var(--ds-r-lg);
+    padding: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 3rem;
+    box-shadow: var(--ds-shadow-md);
+  }
+
+  .about__values-eyebrow {
+    font-family: var(--ds-font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ds-pink); /* pink on teal — large/label text only, per WCAG note */
+    margin: 0 0 1.5rem;
+  }
+
+  .values {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .values__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .values__word {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--ds-cream);
+  }
+
+  .values__gloss {
+    font-size: 13px;
+    line-height: 1.55;
+    color: rgba(251, 247, 241, 0.82); /* muted-on-teal, AA-passing */
+  }
+
+  /* Closing tagline · Playfair italic-flavored, centered, quiet */
+  .about__tagline {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-style: normal;
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
+    line-height: 1.2;
+    text-align: center;
+    color: var(--ds-teal);
+    margin: 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--ds-border);
+  }
+
+  /* Motion-safe lift on the values band, desktop only. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .about__values {
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .about__values:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(44, 42, 40, 0.12);
+    }
+  }
+
+  /* Dark-mode token swap (Brand Book §19.4) — neutrals invert only. */
+  @media (prefers-color-scheme: dark) {
+    .about {
+      --ds-cream: #1f1d1b;
+      --ds-oat: #2c2a28;
+      --ds-ink: #f5efe3;
+      --ds-muted: #b5ae9f;
+      --ds-border: #3a3733;
+    }
+    .about__title {
+      color: var(--ds-ink);
+    }
+    .about__lead,
+    .beat__body {
+      color: var(--ds-ink);
+    }
+    .about__tagline {
+      color: var(--ds-pink); /* pink reads better on dark neutrals */
+    }
+  }
+</style>

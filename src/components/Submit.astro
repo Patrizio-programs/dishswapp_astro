@@ -1,0 +1,991 @@
+---
+// src/pages/submit.astro
+//
+// Public recipe submission form. Auth-gated by middleware.
+// Drop this file at src/pages/submit.astro in your Astro project — it becomes
+// the /submit route. The author is set automatically from the signed-in
+// user's username (see Chapter 17 of the DishSwapp Data Architecture PDF).
+//
+// ── AUTH ──────────────────────────────────────────────────────────
+// Middleware (src/middleware.ts) is expected to populate Astro.locals.user
+// with { username, isAuthed }. Swap the resolve_session_somehow() stub in
+// the middleware for your actual auth system (Clerk, Auth.js, custom).
+//
+// Uncomment the auth gate below once your middleware is wired:
+//
+//   const { user } = Astro.locals;
+//   if (!user?.isAuthed) {
+//     return Astro.redirect("/sign-in?next=/submit");
+//   }
+//
+// ── DATA ──────────────────────────────────────────────────────────
+// In production, replace the hardcoded seed lists below with live data
+// from your Astro content collections:
+//
+//   import { getCollection } from "astro:content";
+//   const cuisines = (await getCollection("cuisines")).map(c => ({
+//     slug: c.slug, name: c.data.name,
+//   }));
+//   const diets = (await getCollection("diets")).map(d => ({
+//     slug: d.slug, name: d.data.name,
+//   }));
+//   const tags = (await getCollection("tags", ({ data }) => data.isCurated))
+//     .map(t => ({ slug: t.slug, name: t.data.name }));
+//
+// The hardcoded seed values below match the worldwide cuisine catalog
+// (Chapter 11) and the curated tag set (Chapter 12) so the form renders
+// correctly out of the box.
+
+interface TaxonomyOption { slug: string; name: string }
+
+const cuisines: TaxonomyOption[] = [
+  { slug: 'italian',          name: 'Italian' },
+  { slug: 'mexican',          name: 'Mexican' },
+  { slug: 'asian',            name: 'Asian' },
+  { slug: 'french',           name: 'French' },
+  { slug: 'indian-north',     name: 'Indian (North)' },
+  { slug: 'thai',             name: 'Thai' },
+  { slug: 'japanese',         name: 'Japanese' },
+  { slug: 'chinese-cantonese',name: 'Chinese (Cantonese)' },
+  { slug: 'chinese-sichuan',  name: 'Chinese (Sichuan)' },
+  { slug: 'mediterranean',    name: 'Mediterranean' },
+  { slug: 'greek',            name: 'Greek' },
+  { slug: 'spanish',          name: 'Spanish' },
+  { slug: 'korean',           name: 'Korean' },
+  { slug: 'vietnamese',       name: 'Vietnamese' },
+  { slug: 'tex-mex',          name: 'Tex-Mex' },
+  { slug: 'cajun-creole',     name: 'Cajun / Creole' },
+  { slug: 'southern-us',      name: 'Southern US' },
+  { slug: 'american',         name: 'American' },
+  { slug: 'brazilian',        name: 'Brazilian' },
+  { slug: 'peruvian',         name: 'Peruvian' },
+  { slug: 'argentinian',      name: 'Argentinian' },
+  { slug: 'jamaican',         name: 'Jamaican' },
+  { slug: 'ethiopian',        name: 'Ethiopian' },
+  { slug: 'nigerian',         name: 'Nigerian' },
+  { slug: 'lebanese',         name: 'Lebanese' },
+  { slug: 'turkish',          name: 'Turkish' },
+  { slug: 'israeli',          name: 'Israeli' },
+  { slug: 'persian',          name: 'Persian' },
+  { slug: 'moroccan',         name: 'Moroccan' },
+  { slug: 'egyptian',         name: 'Egyptian' },
+  { slug: 'indian-south',     name: 'Indian (South)' },
+  { slug: 'nepalese',         name: 'Nepalese' },
+  { slug: 'sri-lankan',       name: 'Sri Lankan' },
+  { slug: 'indonesian',       name: 'Indonesian' },
+  { slug: 'filipino',         name: 'Filipino' },
+  { slug: 'malaysian',        name: 'Malaysian' },
+  { slug: 'singaporean',      name: 'Singaporean' },
+  { slug: 'burmese',          name: 'Burmese' },
+  { slug: 'cambodian',        name: 'Cambodian' },
+  { slug: 'hawaiian',         name: 'Hawaiian' },
+  { slug: 'australian-modern',name: 'Australian modern' },
+];
+
+const mealTypes: TaxonomyOption[] = [
+  { slug: 'breakfast', name: 'Breakfast' },
+  { slug: 'lunch',     name: 'Lunch' },
+  { slug: 'dinner',    name: 'Dinner' },
+  { slug: 'snack',     name: 'Snack' },
+  { slug: 'dessert',   name: 'Dessert' },
+  { slug: 'drink',     name: 'Drink' },
+];
+
+const diets: TaxonomyOption[] = [
+  { slug: 'vegan',        name: 'Vegan' },
+  { slug: 'vegetarian',   name: 'Vegetarian' },
+  { slug: 'gluten-free',  name: 'Gluten-Free' },
+  { slug: 'keto',         name: 'Keto' },
+  { slug: 'halal',        name: 'Halal' },
+  { slug: 'kosher',       name: 'Kosher' },
+  { slug: 'paleo',        name: 'Paleo' },
+  { slug: 'low-fodmap',   name: 'Low-FODMAP' },
+];
+
+const seasons: TaxonomyOption[] = [
+  { slug: 'spring', name: 'Spring' },
+  { slug: 'summer', name: 'Summer' },
+  { slug: 'fall',   name: 'Fall' },
+  { slug: 'winter', name: 'Winter' },
+  { slug: 'holiday',name: 'Holiday' },
+];
+
+const tags: TaxonomyOption[] = [
+  { slug: 'one-pot',            name: 'One-Pot' },
+  { slug: 'slow-cook',          name: 'Slow-Cook' },
+  { slug: 'no-bake',            name: 'No-Bake' },
+  { slug: 'grill',              name: 'Grill' },
+  { slug: 'braise',             name: 'Braise' },
+  { slug: 'cast-iron',          name: 'Cast-Iron' },
+  { slug: 'instant-pot',        name: 'Instant Pot' },
+  { slug: 'dutch-oven',         name: 'Dutch Oven' },
+  { slug: 'weeknight',          name: 'Weeknight' },
+  { slug: 'holiday',            name: 'Holiday' },
+  { slug: 'dinner-party',       name: 'Dinner Party' },
+  { slug: 'meal-prep',          name: 'Meal Prep' },
+  { slug: 'high-protein',       name: 'High-Protein' },
+  { slug: 'egg-free',           name: 'Egg-Free' },
+  { slug: 'under-30-min',       name: 'Under 30 Min' },
+  { slug: 'under-15-min',       name: 'Under 15 Min' },
+  { slug: 'comfort-food',       name: 'Comfort Food' },
+  { slug: 'light',              name: 'Light' },
+  { slug: 'spicy',              name: 'Spicy' },
+  { slug: 'kid-friendly',       name: 'Kid-Friendly' },
+];
+
+// Page metadata
+const pageTitle = 'Submit a recipe — DishSwapp';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Brand fonts: Playfair Display, Inter, JetBrains Mono (Brand Book v2.0 §7) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+<main class="container py-5" style="max-width: 880px;">
+
+  <!-- Hero -->
+  <div class="form-hero mb-5">
+    <span class="eyebrow">CONTRIBUTE</span>
+    <h1>Submit a recipe</h1>
+    <p>Your cookbook, our cookbook. Fill it in — a maintainer will review before it goes live.</p>
+  </div>
+
+  <form id="recipe-form" action="/api/submit-recipe" method="POST" enctype="multipart/form-data" novalidate>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 1: Basic info
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Basic info</legend>
+
+      <div class="mb-3">
+        <label for="title" class="form-label">Recipe title<span class="req">*</span></label>
+        <input id="title" name="title" type="text" required maxlength="80"
+               class="form-control" placeholder="Grandma's Sunday ragù" />
+        <div class="form-text">Max 80 characters. Renders in Playfair 700.</div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-7">
+          <label for="slug" class="form-label">Slug <span class="text-muted">(auto, editable)</span></label>
+          <input id="slug" name="slug" type="text" pattern="[a-z0-9-]+"
+                 class="form-control" readonly />
+          <div class="form-text">URL: dishswapp.org/recipe/<span id="slug-preview" style="font-family: var(--ds-font-mono);">…</span></div>
+        </div>
+        <div class="col-md-2">
+          <label for="servings" class="form-label">Serves<span class="req">*</span></label>
+          <input id="servings" name="servings" type="number" min="1" value="4"
+                 class="form-control" required style="font-family: var(--ds-font-mono);" />
+        </div>
+        <div class="col-md-3">
+          <label for="servingUnit" class="form-label">Serving label</label>
+          <input id="servingUnit" name="servingUnit" type="text" value="serves"
+                 class="form-control" />
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label for="description" class="form-label">Headnote<span class="req">*</span></label>
+        <textarea id="description" name="description" required maxlength="280"
+                  rows="3" class="form-control"
+                  placeholder="The slow-cooked Bolognese that survived three generations."></textarea>
+        <div class="d-flex justify-content-between mt-1">
+          <div class="form-text">The intro paragraph. Max 280 chars. Recipe card excerpt is taken from the first 140.</div>
+          <div class="char-counter"><span id="desc-count">0</span> / 280</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 2: Cover image
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Cover image</legend>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-7">
+          <label class="form-label">Photo<span class="req">*</span> <span class="text-muted">(16:10, min 480×300)</span></label>
+          <div class="drop-zone" id="dropZone" role="button" tabindex="0">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <strong>Drag a photo here</strong>, or click to browse.<br />
+            <span style="font-size: 12px;">Warm light, real plate, hands in frame. CC-BY-4.0 by default.</span>
+          </div>
+          <input id="coverImage" name="coverImage" type="file" accept="image/*" required style="display:none;" />
+          <div id="coverPreview" style="display:none;" class="mt-2">
+            <img id="coverImg" src="" alt="cover preview" class="img-fluid" style="max-height: 200px; border-radius: var(--ds-r-md);" />
+            <button type="button" class="btn btn-ghost btn-sm" id="clearCoverBtn">Remove</button>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <label for="photoCredit" class="form-label">Photo credit<span class="req">*</span></label>
+          <input id="photoCredit" name="photoCredit" type="text" required
+                 class="form-control" placeholder="Photo by Patrizio, used with permission." />
+          <div class="form-text mt-1">Required by the brand's <em>Generous</em> value.</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 3: Taxonomy
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Categorize it</legend>
+
+      <div class="mb-3">
+        <label class="form-label">Cuisines<span class="req">*</span> <span class="text-muted">(pick at least one)</span></label>
+        <div id="cuisineChips">
+          {cuisines.map(c => (
+            <span class="chip" data-field="cuisines" data-value={c.slug}>{c.name}</span>
+          ))}
+        </div>
+        <div class="form-text mt-1">A recipe can be multi-cuisine — Mexican <em>and</em> Tex-Mex is normal.</div>
+        <input type="hidden" name="cuisines" id="cuisinesValue" required />
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Meal types</label>
+          <div id="mealChips">
+            {mealTypes.map(m => (
+              <span class="chip" data-field="mealTypes" data-value={m.slug}>{m.name}</span>
+            ))}
+          </div>
+          <input type="hidden" name="mealTypes" id="mealTypesValue" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Diets</label>
+          <div id="dietChips">
+            {diets.map(d => (
+              <span class="chip" data-field="diets" data-value={d.slug}>{d.name}</span>
+            ))}
+          </div>
+          <input type="hidden" name="diets" id="dietsValue" />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Difficulty<span class="req">*</span></label>
+        <div class="btn-group w-100" role="group">
+          <input type="radio" class="btn-check" name="difficulty" value="easy" id="diff-easy" required />
+          <label class="btn btn-outline-primary" for="diff-easy">Easy</label>
+          <input type="radio" class="btn-check" name="difficulty" value="intermediate" id="diff-int" />
+          <label class="btn btn-outline-primary" for="diff-int">Intermediate</label>
+          <input type="radio" class="btn-check" name="difficulty" value="advanced" id="diff-adv" />
+          <label class="btn btn-outline-primary" for="diff-adv">Advanced</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Season</label>
+        <div>
+          {seasons.map(s => (
+            <span class="chip" data-field="season" data-value={s.slug}>{s.name}</span>
+          ))}
+        </div>
+        <input type="hidden" name="season" id="seasonValue" />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Tags <span class="text-muted">(optional)</span></label>
+        <div>
+          {tags.map(t => (
+            <span class="chip" data-field="tags" data-value={t.slug}>{t.name}</span>
+          ))}
+        </div>
+        <input type="hidden" name="tags" id="tagsValue" />
+      </div>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 4: Timing
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Timing</legend>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="prepTimeMinutes" class="form-label">Prep (min)<span class="req">*</span></label>
+          <input id="prepTimeMinutes" name="prepTimeMinutes" type="number" min="0"
+                 class="form-control" required style="font-family: var(--ds-font-mono);" />
+        </div>
+        <div class="col-md-4">
+          <label for="cookTimeMinutes" class="form-label">Cook (min)<span class="req">*</span></label>
+          <input id="cookTimeMinutes" name="cookTimeMinutes" type="number" min="0"
+                 class="form-control" required style="font-family: var(--ds-font-mono);" />
+        </div>
+        <div class="col-md-4">
+          <label for="totalTimeMinutes" class="form-label">Total <span class="text-muted">(auto)</span></label>
+          <input id="totalTimeMinutes" name="totalTimeMinutes" type="number" readonly
+                 class="form-control" style="font-family: var(--ds-font-mono); background: var(--ds-oat);" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 5: Ingredients (repeatable)
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Ingredients <span class="text-muted">(min 1)</span></legend>
+      <div id="ingredientsList"></div>
+      <button type="button" id="addIngredient" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-plus-lg"></i> Add ingredient
+      </button>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 6: Method steps (repeatable)
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Method steps <span class="text-muted">(min 1)</span></legend>
+      <div id="stepsList"></div>
+      <button type="button" id="addStep" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-plus-lg"></i> Add step
+      </button>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 7: Nutrition (collapsible)
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">
+        <a href="#" class="text-decoration-none" data-bs-toggle="collapse" data-bs-target="#nutritionBlock" style="color: var(--ds-teal);">
+          Nutrition <span class="text-muted">(optional)</span> <i class="bi bi-chevron-down"></i>
+        </a>
+      </legend>
+      <div id="nutritionBlock" class="collapse">
+        <div class="row g-2 mb-2">
+          <div class="col-md-3"><input name="nutrition.calories" type="number" class="form-control" placeholder="calories" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3"><input name="nutrition.proteinG" type="number" class="form-control" placeholder="protein (g)" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3"><input name="nutrition.fatG" type="number" class="form-control" placeholder="fat (g)" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3"><input name="nutrition.carbsG" type="number" class="form-control" placeholder="carbs (g)" style="font-family: var(--ds-font-mono);" /></div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-3"><input name="nutrition.fiberG" type="number" class="form-control" placeholder="fiber (g)" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3"><input name="nutrition.sugarG" type="number" class="form-control" placeholder="sugar (g)" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3"><input name="nutrition.sodiumMg" type="number" class="form-control" placeholder="sodium (mg)" style="font-family: var(--ds-font-mono);" /></div>
+          <div class="col-md-3">
+            <select name="nutrition.source" class="form-select">
+              <option value="estimated">estimated</option>
+              <option value="USDA">USDA</option>
+              <option value="label">label</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ──────────────────────────────────────────────────────────────
+         SECTION 8: Source (optional)
+         ────────────────────────────────────────────────────────────── -->
+    <fieldset>
+      <legend class="eyebrow">Source <span class="text-muted">(credit if adapted)</span></legend>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="adaptedFrom" class="form-label">Adapted from</label>
+          <input id="adaptedFrom" name="adaptedFrom" type="text"
+                 class="form-control" placeholder="Marcella Hazan, Essentials of Classic Italian Cooking" />
+        </div>
+        <div class="col-md-6">
+          <label for="sourceUrl" class="form-label">Source URL</label>
+          <input id="sourceUrl" name="sourceUrl" type="url"
+                 class="form-control" placeholder="https://example.com/original-recipe" />
+        </div>
+      </div>
+      <div class="form-text mt-2">If you adapted this from another published recipe, credit it. The brand's <em>Generous</em> value says we always link back.</div>
+    </fieldset>
+
+    <!-- Honeypot — invisible to humans -->
+    <div class="honeypot" aria-hidden="true">
+      <label>Website (leave blank)
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </label>
+    </div>
+
+    <!-- Submit bar -->
+    <div class="submit-bar">
+      <div class="d-flex justify-content-end gap-2">
+        <button type="submit" name="action" value="draft" class="btn btn-ghost">
+          Save draft
+        </button>
+        <button type="submit" name="action" value="submit" class="btn btn-spice">
+          Submit for review
+        </button>
+      </div>
+    </div>
+
+  </form>
+</main>
+
+<!-- Bootstrap JS bundle (for collapse, etc.) -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Form logic — is:inline so Astro doesn't process/bundle it -->
+<script is:inline>
+  (function () {
+    'use strict';
+
+    // ───────────────────────────────────────────────────────────────
+    // 1. Auto-generate slug from title + live preview
+    // ───────────────────────────────────────────────────────────────
+    var titleInput  = document.getElementById('title');
+    var slugInput   = document.getElementById('slug');
+    var slugPreview = document.getElementById('slug-preview');
+
+    function updateSlug() {
+      var slug = titleInput.value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60);
+      slugInput.value = slug;
+      slugPreview.textContent = slug || '…';
+    }
+    titleInput.addEventListener('input', updateSlug);
+
+    // Make slug editable (click to unlock)
+    slugInput.addEventListener('click', function () {
+      slugInput.removeAttribute('readonly');
+    });
+
+    // ───────────────────────────────────────────────────────────────
+    // 2. Auto-compute total time = prep + cook
+    // ───────────────────────────────────────────────────────────────
+    var prepInput  = document.getElementById('prepTimeMinutes');
+    var cookInput  = document.getElementById('cookTimeMinutes');
+    var totalInput = document.getElementById('totalTimeMinutes');
+
+    function recomputeTotal() {
+      var p = parseInt(prepInput.value || '0', 10);
+      var c = parseInt(cookInput.value || '0', 10);
+      totalInput.value = p + c;
+    }
+    prepInput.addEventListener('input', recomputeTotal);
+    cookInput.addEventListener('input', recomputeTotal);
+
+    // ───────────────────────────────────────────────────────────────
+    // 3. Headnote char counter (warning at 250+)
+    // ───────────────────────────────────────────────────────────────
+    var desc    = document.getElementById('description');
+    var counter = document.getElementById('desc-count');
+    desc.addEventListener('input', function () {
+      var len = desc.value.length;
+      counter.textContent = len;
+      counter.parentElement.classList.toggle('warning', len > 250);
+    });
+
+    // ───────────────────────────────────────────────────────────────
+    // 4. Chip multi-selects → serialize into hidden inputs
+    // ───────────────────────────────────────────────────────────────
+    var chipFields = ['cuisines', 'mealTypes', 'diets', 'season', 'tags'];
+    chipFields.forEach(function (field) {
+      var chips = document.querySelectorAll('.chip[data-field="' + field + '"]');
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          chip.classList.toggle('selected');
+          serializeChipField(field);
+        });
+      });
+    });
+
+    function serializeChipField(field) {
+      var selected = Array.prototype.map.call(
+        document.querySelectorAll('.chip[data-field="' + field + '"].selected'),
+        function (c) { return c.getAttribute('data-value'); }
+      );
+      document.getElementById(field + 'Value').value = selected.join(',');
+    }
+
+    // ───────────────────────────────────────────────────────────────
+    // 5. Cover image drop zone + preview
+    // ───────────────────────────────────────────────────────────────
+    var dropZone        = document.getElementById('dropZone');
+    var coverFileInput  = document.getElementById('coverImage');
+    var coverPreview    = document.getElementById('coverPreview');
+    var coverImg        = document.getElementById('coverImg');
+    var clearCoverBtn   = document.getElementById('clearCoverBtn');
+
+    dropZone.addEventListener('click', function () { coverFileInput.click(); });
+    dropZone.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); coverFileInput.click(); }
+    });
+
+    coverFileInput.addEventListener('change', function (e) {
+      if (e.target.files[0]) showCoverPreview(e.target.files[0]);
+    });
+
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+      });
+    });
+    dropZone.addEventListener('drop', function (e) {
+      if (e.dataTransfer.files[0]) {
+        coverFileInput.files = e.dataTransfer.files;
+        showCoverPreview(e.dataTransfer.files[0]);
+      }
+    });
+
+    function showCoverPreview(file) {
+      coverImg.src = URL.createObjectURL(file);
+      coverPreview.style.display = 'block';
+      dropZone.style.display = 'none';
+    }
+    clearCoverBtn.addEventListener('click', function () {
+      coverFileInput.value = '';
+      coverPreview.style.display = 'none';
+      dropZone.style.display = 'block';
+    });
+
+    // ───────────────────────────────────────────────────────────────
+    // 6. Repeatable ingredient rows
+    // ───────────────────────────────────────────────────────────────
+    var ingredientCount = 0;
+    var ingredientsList = document.getElementById('ingredientsList');
+    var addIngredientBtn = document.getElementById('addIngredient');
+
+    function makeIngredientRow(idx) {
+      var row = document.createElement('div');
+      row.className = 'row ingredient-row g-2';
+      row.dataset.idx = idx;
+      row.innerHTML =
+        '<div class="col-1 text-center">' +
+          '<span style="font-family: var(--ds-font-mono); font-weight: 700; color: var(--ds-teal);">' + (idx + 1) + '</span>' +
+        '</div>' +
+        '<div class="col-5">' +
+          '<input name="ingredients[' + idx + '][name]" type="text" class="form-control" placeholder="beef chuck" required />' +
+        '</div>' +
+        '<div class="col-2">' +
+          '<input name="ingredients[' + idx + '][quantity]" type="number" step="any" class="form-control" placeholder="400" style="font-family: var(--ds-font-mono);" />' +
+        '</div>' +
+        '<div class="col-2">' +
+          '<input name="ingredients[' + idx + '][unit]" type="text" class="form-control" placeholder="g" />' +
+        '</div>' +
+        '<div class="col-2">' +
+          '<input name="ingredients[' + idx + '][note]" type="text" class="form-control" placeholder="finely diced" />' +
+        '</div>';
+      return row;
+    }
+    function addIngredientRow() {
+      var row = makeIngredientRow(ingredientCount);
+      ingredientsList.appendChild(row);
+      ingredientCount++;
+    }
+    addIngredientBtn.addEventListener('click', addIngredientRow);
+    addIngredientRow(); // seed first row
+
+    // ───────────────────────────────────────────────────────────────
+    // 7. Repeatable step cards
+    // ───────────────────────────────────────────────────────────────
+    var stepCount = 0;
+    var stepsList = document.getElementById('stepsList');
+    var addStepBtn = document.getElementById('addStep');
+
+    function makeStepCard(idx) {
+      var card = document.createElement('div');
+      card.className = 'step-card';
+      card.dataset.idx = idx;
+      card.innerHTML =
+        '<div class="d-flex justify-content-between align-items-center mb-2">' +
+          '<div>' +
+            '<span class="step-num">' + (idx + 1) + '</span>' +
+            '<strong style="font-family: var(--ds-font-sans); color: var(--ds-ink);">Step ' + (idx + 1) + '</strong>' +
+          '</div>' +
+          (idx > 0 ? '<button type="button" class="btn btn-ghost btn-sm remove-step"><i class="bi bi-x-lg"></i></button>' : '') +
+        '</div>' +
+        '<textarea name="steps[' + idx + '][instruction]" rows="3" required class="form-control mb-2" placeholder="Sweat the soffritto in olive oil until translucent, about 7 minutes. Don\'t brown."></textarea>' +
+        '<div class="row g-2 mb-2">' +
+          '<div class="col-md-8">' +
+            '<label class="form-label small text-muted">Step image (1:1, optional)</label>' +
+            '<input name="steps[' + idx + '][image]" type="file" accept="image/*" class="form-control form-control-sm" />' +
+          '</div>' +
+          '<div class="col-md-4">' +
+            '<label class="form-label small text-muted">Timer (seconds)</label>' +
+            '<input name="steps[' + idx + '][timerSeconds]" type="number" min="0" class="form-control form-control-sm" placeholder="420" style="font-family: var(--ds-font-mono);" />' +
+          '</div>' +
+        '</div>' +
+        '<input name="steps[' + idx + '][tip]" type="text" class="form-control" placeholder="Optional tip — e.g. \'The milk softens the meat.\'" />';
+
+      // Wire up the remove button (only present on idx > 0)
+      var removeBtn = card.querySelector('.remove-step');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', function () { card.remove(); });
+      }
+      return card;
+    }
+    function addStepCard() {
+      var card = makeStepCard(stepCount);
+      stepsList.appendChild(card);
+      stepCount++;
+    }
+    addStepBtn.addEventListener('click', addStepCard);
+    addStepCard(); // seed first step
+
+    // ───────────────────────────────────────────────────────────────
+    // 8. Form submit — friendly error handling
+    // ───────────────────────────────────────────────────────────────
+    var form = document.getElementById('recipe-form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Honeypot — silently drop if filled
+      if (form.elements['website'].value) {
+        return;
+      }
+
+      var submitBtn = form.querySelector('button[value="submit"]');
+      var originalLabel = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving…';
+
+      fetch(form.action, { method: 'POST', body: new FormData(form) })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.ok) {
+            window.location.href =
+              '/submit/thanks?pr=' + encodeURIComponent(data.prUrl) +
+              '&preview=' + encodeURIComponent(data.previewUrl);
+          } else {
+            alert(data.error || 'Something went wrong saving your recipe. Want to try again?');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalLabel;
+          }
+        })
+        .catch(function () {
+          alert('Something went wrong saving your recipe. Want to try again?');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalLabel;
+        });
+    });
+  })();
+</script>
+
+<style is:global>
+  /* ───────────────────────────────────────────────────────────────
+     DishSwapp brand tokens — verbatim from Brand Book v2.0 §19
+     Move this block to src/styles/tokens.css once the project has
+     a global stylesheet; the form will inherit it automatically.
+     ─────────────────────────────────────────────────────────────── */
+  :root {
+    --ds-teal:        #3D717C;
+    --ds-teal-dark:   #2A535C;
+    --ds-teal-light:  #5A8E97;
+    --ds-teal-tint:   #E5EDEF;
+    --ds-pink:        #F9B7A4;
+    --ds-pink-soft:   #FCE6DD;
+    --ds-spice:       #E07A3B;
+    --ds-spice-soft:  #F6E0CB;
+    --ds-cream:       #FBF7F1;
+    --ds-oat:         #EFE5D4;
+    --ds-ink:         #2C2A28;
+    --ds-muted:       #6B6661;
+    --ds-border:      #E5DDD0;
+
+    --ds-font-serif:  'Playfair Display', Georgia, serif;
+    --ds-font-sans:   'Inter', system-ui, sans-serif;
+    --ds-font-mono:   'JetBrains Mono', ui-monospace, monospace;
+
+    --ds-r-sm:   4px;
+    --ds-r-md:   10px;
+    --ds-r-lg:   18px;
+    --ds-r-pill: 999px;
+
+    --ds-shadow-sm: 0 1px 2px rgba(44,42,40,0.06);
+    --ds-shadow-md: 0 4px 12px rgba(44,42,40,0.08);
+    --ds-shadow-lg: 0 12px 32px rgba(44,42,40,0.12);
+  }
+
+  body {
+    background: var(--ds-cream);
+    color: var(--ds-ink);
+    font-family: var(--ds-font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, .serif {
+    font-family: var(--ds-font-serif);
+    color: var(--ds-ink);
+  }
+
+  /* Eyebrow label — JetBrains Mono uppercase tracked (Brand Book §10) */
+  .eyebrow {
+    font-family: var(--ds-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ds-teal);
+    padding: 0;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* Form fields — cream cards with teal focus */
+  .form-control, .form-select {
+    background: #fff;
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-r-md);
+    padding: 10px 14px;
+    font-size: 15px;
+    color: var(--ds-ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: var(--ds-teal);
+    box-shadow: 0 0 0 3px rgba(61,113,124,0.15);
+    background: #fff;
+    color: var(--ds-ink);
+  }
+  .form-control::placeholder {
+    color: var(--ds-muted);
+    font-style: italic;
+  }
+  .form-label {
+    font-weight: 600;
+    color: var(--ds-ink);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .form-text {
+    color: var(--ds-muted);
+    font-size: 12px;
+  }
+
+  /* Fieldset — section grouping */
+  fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 48px;
+  }
+  legend.eyebrow {
+    border-bottom: 1px solid var(--ds-border);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  /* Buttons — Brand Book §10 four-button kit */
+  .btn-primary {
+    background: var(--ds-teal);
+    border-color: var(--ds-teal);
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: var(--ds-r-md);
+    border: 1px solid var(--ds-teal);
+    transition: background 0.15s;
+  }
+  .btn-primary:hover {
+    background: var(--ds-teal-dark);
+    border-color: var(--ds-teal-dark);
+    color: #fff;
+  }
+  .btn-outline-primary {
+    color: var(--ds-teal);
+    border-color: var(--ds-teal);
+    background: transparent;
+    font-weight: 600;
+  }
+  .btn-outline-primary:hover {
+    background: var(--ds-teal-tint);
+    color: var(--ds-teal-dark);
+    border-color: var(--ds-teal-dark);
+  }
+  .btn-spice {
+    background: var(--ds-spice);
+    border-color: var(--ds-spice);
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: var(--ds-r-md);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .btn-spice:hover {
+    background: #C76A35;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: var(--ds-shadow-md);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ds-ink);
+    border: none;
+    font-weight: 600;
+    padding: 10px 22px;
+  }
+  .btn-ghost:hover {
+    color: var(--ds-teal);
+    text-decoration: underline;
+    background: transparent;
+  }
+
+  /* Pill-style multi-select chips */
+  .chip {
+    display: inline-block;
+    background: var(--ds-pink);
+    color: var(--ds-ink);
+    padding: 4px 12px;
+    border-radius: var(--ds-r-pill);
+    font-size: 13px;
+    font-weight: 500;
+    margin: 4px 6px 4px 0;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .chip.selected {
+    background: var(--ds-teal);
+    color: #fff;
+  }
+  .chip:hover {
+    background: var(--ds-teal);
+    color: #fff;
+  }
+
+  /* Difficulty radio group — button-style */
+  .btn-group .btn-outline-primary {
+    border-color: var(--ds-border);
+    color: var(--ds-muted);
+  }
+  .btn-check:checked + .btn-outline-primary {
+    background: var(--ds-teal);
+    color: #fff;
+    border-color: var(--ds-teal);
+  }
+
+  /* Ingredient / step rows — warm card background */
+  .ingredient-row {
+    background: var(--ds-oat);
+    padding: 12px;
+    border-radius: var(--ds-r-md);
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .step-card {
+    background: #fff;
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-r-md);
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: var(--ds-shadow-sm);
+  }
+  .step-card .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--ds-teal);
+    color: #fff;
+    border-radius: 50%;
+    font-family: var(--ds-font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+
+  /* Cover image drop zone */
+  .drop-zone {
+    border: 2px dashed var(--ds-border);
+    border-radius: var(--ds-r-md);
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--ds-muted);
+    background: var(--ds-oat);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--ds-teal);
+    background: var(--ds-teal-tint);
+  }
+  .drop-zone i {
+    font-size: 28px;
+    color: var(--ds-teal);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* Submit bar */
+  .submit-bar {
+    background: var(--ds-cream);
+    border-top: 1px solid var(--ds-border);
+    padding: 16px 0;
+    margin-top: 32px;
+  }
+
+  /* Char counter */
+  .char-counter {
+    font-family: var(--ds-font-mono);
+    font-size: 11px;
+    color: var(--ds-muted);
+    font-weight: 500;
+  }
+  .char-counter.warning {
+    color: var(--ds-spice);
+  }
+
+  /* Hero — page header */
+  .form-hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--ds-teal);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .form-hero p {
+    font-family: var(--ds-font-serif);
+    font-style: italic;
+    color: var(--ds-muted);
+    font-size: 17px;
+    margin-bottom: 0;
+  }
+
+  /* Sticky CTA on mobile */
+  @media (max-width: 768px) {
+    .submit-bar {
+      position: sticky;
+      bottom: 0;
+      z-index: 1020;
+      box-shadow: 0 -4px 12px rgba(44,42,40,0.08);
+    }
+  }
+
+  /* Honeypot — hidden from humans */
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+  }
+
+  /* Required asterisk */
+  .req {
+    color: var(--ds-spice);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+</style>
+
+</body>
+</html>
