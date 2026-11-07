@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DishSwapp Brand Book v2.0 — Astro + Bootstrap Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ====================================================================
+   DishSwapp Brand Book — page setup
+   A4 portrait @ 96dpi = 794 × 1123 px
+   ==================================================================== */
+@page {
+  size: 794px 1123px;
+  margin: 0;
+}
+
+:root {
+  /* Brand tokens (the system documented inside this book) */
+  --ds-teal:        #3D717C;
+  --ds-teal-dark:   #2A535C;
+  --ds-teal-light:  #5A8E97;
+  --ds-teal-tint:   #E5EDEF;   /* XL-tier tint */
+  --ds-pink:        #F9B7A4;
+  --ds-pink-soft:   #FCE6DD;
+  --ds-spice:       #E07A3B;
+  --ds-spice-soft:  #F6E0CB;
+  --ds-cream:       #FBF7F1;
+  --ds-oat:         #EFE5D4;
+  --ds-ink:         #2C2A28;
+  --ds-muted:       #6B6661;
+  --ds-border:      #E5DDD0;
+  --ds-success:     #6B7A3A;
+  --ds-warning:     #E07A3B;
+  --ds-danger:      #C75D3B;
+  --ds-info:        #3D717C;
+
+  /* Book-internal typography */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Courier New', monospace;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 794px;
+  background: var(--ds-cream);
+  color: var(--ds-ink);
+  font-family: var(--font-sans), sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif;
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Browser preview auto-scale so the full A4 page is visible without scrolling */
+@media screen {
+  html {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    background: #2C2A28;
+  }
+  body {
+    margin: 20px auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+}
+
+/* ---------- COVER ---------- */
+.cover {
+  width: 794px;
+  height: 1123px;
+  box-sizing: border-box;
+  position: relative;
+  background: var(--ds-cream);
+  clip-path: inset(0);
+  break-after: page;
+  padding: 70px 70px 60px 70px;
+  display: flex;
+  flex-direction: column;
+}
+.cover::before {
+  /* giant peachy-pink arc in the top-right */
+  content: "";
+  position: absolute;
+  top: -180px;
+  right: -180px;
+  width: 540px;
+  height: 540px;
+  border-radius: 50%;
+  background: var(--ds-pink);
+  opacity: 0.85;
+}
+.cover::after {
+  /* deep-teal block bottom-left */
+  content: "";
+  position: absolute;
+  bottom: -120px;
+  left: -120px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: var(--ds-teal);
+  opacity: 0.92;
+}
+.cover .top-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.cover .tag {
+  font-family: var(--font-mono), sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--ds-teal);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.cover .version {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ds-ink);
+  font-weight: 500;
+  background: rgba(255,255,255,0.7);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.cover .center {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cover .wordmark {
+  font-family: var(--font-serif), sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif, sans-serif;
+  font-weight: 800;
+  font-size: 132px;
+  line-height: 0.95;
+  color: var(--ds-ink);
+  letter-spacing: -0.03em;
+}
+.cover .wordmark .accent {
+  color: var(--ds-teal);
+  font-style: italic;
+  font-weight: 600;
+}
+.cover .subtitle {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ds-ink);
+  margin-top: 22px;
+  max-width: 460px;
+  line-height: 1.4;
+}
+.cover .tagline {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--ds-teal);
+  margin-top: 18px;
+}
+.cover .bottom {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+.cover .swatch-strip {
+  display: flex;
+  gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 36px;
+  width: 320px;
+  border: 1px solid var(--ds-border);
+}
+.cover .swatch-strip > div { flex: 1; }
+.cover .edition {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--ds-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- BODY SECTIONS ---------- */
+.main-content {
+  padding: 56px 60px 48px 60px;
+}
+
+.section {
+  break-inside: avoid;
+  margin-top: 0;
+}
+.section + .section { margin-top: 28px; }
+
+.section-header {
+  break-after: avoid;
+  break-inside: avoid;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ds-border);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+.section-num {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ds-spice);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--ds-ink);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.section-eyebrow {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ds-muted);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+p { margin: 0 0 10px 0; }
+.body-text { font-size: 13px; line-height: 1.6; color: var(--ds-ink); margin: 0 0 10px 0; }
+.body-text.lead { font-size: 15px; color: var(--ds-ink); font-weight: 400; }
+.muted { color: var(--ds-muted); }
+.label { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ds-muted); font-weight: 500; }
+
+/* ---------- COLUMNS ---------- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  break-inside: avoid;
+}
+.two-col > * { min-width: 0; }
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  break-inside: avoid;
+}
+.three-col > * { min-width: 0; }
+.four-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 14px;
+  break-inside: avoid;
+}
+.four-col > * { min-width: 0; }
+
+/* ---------- CARDS / BLOCKS ---------- */
+.card {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  break-inside: avoid;
+  margin-bottom: 14px;
+}
+.card.tinted { background: var(--ds-teal-tint); border-color: #D6E0E3; }
+.card.oat    { background: var(--ds-oat); border-color: #E2D6BE; }
+.card.dark   { background: var(--ds-teal); color: #fff; border-color: var(--ds-teal-dark); }
+.card.dark .label { color: rgba(255,255,255,0.7); }
+.card.dark .body-text { color: rgba(255,255,255,0.92); }
+
+.card-title {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ds-ink);
+  margin: 0 0 6px 0;
+}
+.card.dark .card-title { color: #fff; }
+.card-body { font-size: 12.5px; line-height: 1.55; color: var(--ds-muted); margin: 0; }
+.card.dark .card-body { color: rgba(255,255,255,0.85); }
+
+/* ---------- SWATCHES ---------- */
+.swatch-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  break-inside: avoid;
+  margin-bottom: 14px;
+}
+.swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--ds-border);
+  background: #fff;
+  break-inside: avoid;
+}
+.swatch .chip { height: 110px; }
+.swatch .meta { padding: 10px 12px 12px 12px; }
+.swatch .name { font-family: var(--font-serif), serif; font-weight: 700; font-size: 14px; color: var(--ds-ink); margin: 0; }
+.swatch .hex  { font-family: var(--font-mono), monospace; font-size: 11px; color: var(--ds-teal); font-weight: 600; margin-top: 4px; letter-spacing: 0.04em; }
+.swatch .role { font-size: 10.5px; color: var(--ds-muted); margin-top: 6px; line-height: 1.45; }
+
+/* ---------- TABLES ---------- */
+table.tokens, table.contrast, table.voice, table.scale {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+table.tokens th, table.tokens td,
+table.contrast th, table.contrast td,
+table.voice th, table.voice td,
+table.scale th, table.scale td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--ds-border);
+  vertical-align: top;
+}
+table.tokens thead th, table.contrast thead th, table.voice thead th, table.scale thead th {
+  background: var(--ds-teal);
+  color: #fff;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: none;
+}
+table.tokens td.mono, table.contrast td.mono, table.scale td.mono { font-family: var(--font-mono), monospace; color: var(--ds-teal); font-weight: 500; }
+table.contrast td.pass { color: var(--ds-success); font-weight: 600; }
+table.contrast td.fail { color: var(--ds-danger); font-weight: 600; }
+
+/* ---------- CODE BLOCKS ---------- */
+.code {
+  background: var(--ds-ink);
+  color: #E5DDD0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.code .kw { color: #F9B7A4; }
+.code .va { color: #5A8E97; }
+.code .st { color: #E07A3B; }
+.code .cm { color: #8A857F; font-style: italic; }
+.code .pn { color: #FCE6DD; }
+
+/* ---------- TYPE SPECIMEN ---------- */
+.specimen {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-bottom: 12px;
+  break-inside: avoid;
+}
+.specimen .aa {
+  font-family: var(--font-serif), serif;
+  font-size: 84px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ds-teal);
+  letter-spacing: -0.02em;
+}
+.specimen .aa.italic { font-style: italic; font-weight: 500; }
+.specimen.sans .aa { font-family: var(--font-sans), sans-serif; font-weight: 700; color: var(--ds-ink); letter-spacing: -0.03em; }
+.specimen.mono .aa { font-family: var(--font-mono), monospace; font-size: 64px; font-weight: 500; color: var(--ds-spice); letter-spacing: 0; }
+.specimen .pangram {
+  font-size: 13px;
+  color: var(--ds-muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+.specimen.sans .pangram { font-style: normal; }
+.specimen .family {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+  margin-bottom: 6px;
+}
+
+/* ---------- POSITIONING SLIDER ---------- */
+.slider-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--ds-border);
+  font-size: 11.5px;
+  break-inside: avoid;
+}
+.slider-row .left, .slider-row .right { font-family: var(--font-sans), sans-serif; font-weight: 500; }
+.slider-row .right { text-align: right; }
+.slider-row .track {
+  height: 6px;
+  background: var(--ds-oat);
+  border-radius: 999px;
+  position: relative;
+}
+.slider-row .track::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ds-spice);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.slider-row .track[data-pos="15"]::before { left: 15%; }
+.slider-row .track[data-pos="25"]::before { left: 25%; }
+.slider-row .track[data-pos="35"]::before { left: 35%; }
+.slider-row .track[data-pos="55"]::before { left: 55%; }
+.slider-row .track[data-pos="65"]::before { left: 65%; }
+.slider-row .track[data-pos="80"]::before { left: 80%; }
+.slider-row .track[data-pos="90"]::before { left: 90%; }
+
+/* ---------- BUTTONS / FORMS (component examples) ---------- */
+.btn-demo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  cursor: default;
+  letter-spacing: 0.01em;
+}
+.btn-primary { background: var(--ds-teal); color: #fff; }
+.btn-primary.hover { background: var(--ds-teal-dark); }
+.btn-secondary { background: transparent; color: var(--ds-teal); border-color: var(--ds-teal); }
+.btn-secondary.hover { background: var(--ds-teal-tint); }
+.btn-ghost { background: transparent; color: var(--ds-ink); border-color: transparent; }
+.btn-ghost.hover { background: var(--ds-oat); }
+.btn-spice { background: var(--ds-spice); color: #fff; }
+.btn-spice.hover { background: #C96A2E; }
+.btn-disabled { background: var(--ds-border); color: var(--ds-muted); cursor: not-allowed; }
+
+.pill {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--ds-pink-soft);
+  color: #8B4933;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pill.teal { background: var(--ds-teal-tint); color: var(--ds-teal-dark); }
+.pill.spice { background: var(--ds-spice-soft); color: #8B4933; }
+
+.form-field {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--ds-border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12.5px;
+  color: var(--ds-ink);
+  font-family: var(--font-sans), sans-serif;
+  box-sizing: border-box;
+}
+.form-field.focus { border-color: var(--ds-teal); box-shadow: 0 0 0 3px var(--ds-teal-tint); }
+.form-label { display: block; font-size: 10.5px; font-weight: 600; color: var(--ds-muted); margin-bottom: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* ---------- LOGO LOCKUP GRID ---------- */
+.logo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  break-inside: avoid;
+}
+.logo-cell {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.logo-cell.dark { background: var(--ds-teal); }
+.logo-cell.cream { background: var(--ds-cream); }
+.logo-cell .lockup-name {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+}
+.logo-cell.dark .lockup-name { color: rgba(255,255,255,0.6); }
+.wordmark-lg {
+  font-family: var(--font-serif), serif;
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--ds-ink);
+  letter-spacing: -0.02em;
+}
+.wordmark-lg .accent { color: var(--ds-teal); font-style: italic; font-weight: 600; }
+.wordmark-lg.on-dark { color: #fff; }
+.wordmark-lg.on-dark .accent { color: var(--ds-pink); }
+.wordmark-lg.mono { color: var(--ds-ink); }
+.wordmark-lg.mono .accent { color: var(--ds-teal); }
+
+.symbol {
+  width: 64px;
+  height: 64px;
+  position: relative;
+}
+
+/* ---------- ICONS GRID ---------- */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.icon-cell {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 8px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  break-inside: avoid;
+}
+.icon-cell .name { font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: 0.06em; color: var(--ds-muted); text-transform: uppercase; }
+
+/* ---------- MOCKUP: BROWSER FRAME ---------- */
+.browser {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(44,42,40,0.10);
+  break-inside: avoid;
+  margin-bottom: 12px;
+}
+.browser .chrome {
+  height: 30px;
+  background: #ECE5DA;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--ds-border);
+}
+.browser .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.browser .dot.r { background: #E07A3B; }
+.browser .dot.y { background: #F4B942; }
+.browser .dot.g { background: #6B7A3A; }
+.browser .url {
+  flex: 1;
+  height: 18px;
+  background: #fff;
+  border-radius: 999px;
+  margin-left: 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  color: var(--ds-muted);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid var(--ds-border);
+}
+.browser .viewport {
+  width: 100%;
+  background: var(--ds-cream);
+  position: relative;
+}
+
+/* mock site nav inside browser */
+.mock-nav {
+  height: 44px;
+  background: var(--ds-teal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  color: #fff;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 11px;
+}
+.mock-nav .brand {
+  font-family: var(--font-serif), serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+.mock-nav .brand .accent { color: var(--ds-pink); font-style: italic; font-weight: 500; }
+.mock-nav .links { display: flex; gap: 18px; font-weight: 500; font-size: 10.5px; }
+.mock-nav .links span { opacity: 0.85; }
+.mock-nav .login {
+  background: var(--ds-pink);
+  color: var(--ds-ink);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.mock-hero {
+  height: 240px;
+  background:
+    linear-gradient(135deg, rgba(61,113,124,0.55) 0%, rgba(224,122,59,0.35) 100%),
+    var(--ds-oat);
+  position: relative;
+  padding: 0 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.mock-hero::before {
+  content: "";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: var(--ds-pink);
+  opacity: 0.85;
+}
+.mock-hero .h-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 6px;
+}
+.mock-hero .h-title {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 2;
+  max-width: 56%;
+}
+.mock-hero .h-title .ital { font-style: italic; color: var(--ds-pink); font-weight: 500; }
+.mock-hero .h-cta {
+  position: relative;
+  z-index: 2;
+  margin-top: 12px;
+  display: inline-block;
+  background: var(--ds-spice);
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  width: max-content;
+}
+
+.mock-cuisine-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 18px 22px;
+}
+.mock-cuisine-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--ds-border);
+}
+.mock-cuisine-card .img {
+  height: 60px;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.1) 0%, transparent 100%),
+    var(--ds-pink-soft);
+}
+.mock-cuisine-card.b .img { background: linear-gradient(135deg, rgba(0,0,0,0.1), transparent), #D9C9A8; }
+.mock-cuisine-card.c .img { background: linear-gradient(135deg, rgba(0,0,0,0.1), transparent), #C5D6D9; }
+.mock-cuisine-card .body { padding: 8px 10px; }
+.mock-cuisine-card .title { font-family: var(--font-serif), serif; font-weight: 700; font-size: 12px; color: var(--ds-ink); }
+.mock-cuisine-card .desc { font-size: 9px; color: var(--ds-muted); margin-top: 2px; line-height: 1.4; }
+
+.mock-rotm {
+  margin: 0 22px 18px 22px;
+  background: var(--ds-teal-dark);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mock-rotm .label-l { font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: 0.16em; color: var(--ds-pink); text-transform: uppercase; }
+.mock-rotm .title-l { font-family: var(--font-serif), serif; font-size: 14px; font-weight: 700; margin-top: 2px; }
+.mock-rotm .pill-l { background: var(--ds-pink); color: var(--ds-ink); padding: 4px 10px; border-radius: 999px; font-size: 9px; font-weight: 700; }
+
+.mock-footer {
+  background: var(--ds-teal);
+  color: #fff;
+  padding: 14px 22px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9.5px;
+}
+.mock-footer .col { display: flex; flex-direction: column; gap: 4px; }
+.mock-footer .col .h { font-family: var(--font-serif), serif; font-size: 11px; font-weight: 700; }
+.mock-footer .col .l { opacity: 0.75; }
+
+/* annotation pin */
+.annot {
+  position: absolute;
+  background: var(--ds-spice);
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 700;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  z-index: 5;
+}
+.annot-list {
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  margin-top: 8px;
+}
+.annot-list .num {
+  display: inline-block;
+  background: var(--ds-spice);
+  color: #fff;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  margin-right: 6px;
+  vertical-align: middle;
+  line-height: 16px;
+}
+
+/* ---------- RECIPE CARD anatomy (large) ---------- */
+.recipe-card-lg {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 12px;
+  overflow: hidden;
+  break-inside: avoid;
+  box-shadow: 0 4px 12px rgba(44,42,40,0.06);
+}
+.recipe-card-lg .cover {
+  height: 130px;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.12) 0%, transparent 60%),
+    var(--ds-pink);
+  position: relative;
+  padding: 0;
+  width: auto;
+  height: 130px;
+}
+.recipe-card-lg .body {
+  padding: 12px 16px 14px 16px;
+}
+.recipe-card-lg .pill-row { display: flex; gap: 6px; margin-bottom: 6px; }
+.recipe-card-lg .title {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ds-ink);
+  margin: 0 0 4px 0;
+  line-height: 1.15;
+}
+.recipe-card-lg .meta {
+  font-size: 10.5px;
+  color: var(--ds-muted);
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.04em;
+}
+.recipe-card-lg .excerpt {
+  font-size: 11.5px;
+  color: var(--ds-ink);
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.recipe-card-lg .actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--ds-border);
+  padding-top: 10px;
+  font-size: 10.5px;
+  color: var(--ds-muted);
+}
+.recipe-card-lg .actions .save { color: var(--ds-teal); font-weight: 600; }
+.recipe-card-lg .actions .right { display: flex; gap: 12px; }
+
+.recipe-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  break-inside: avoid;
+}
+.recipe-card-sm {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  overflow: hidden;
+  break-inside: avoid;
+}
+.recipe-card-sm .img { height: 70px; }
+.recipe-card-sm .img.a { background: linear-gradient(135deg, rgba(0,0,0,0.1), transparent), var(--ds-pink-soft); }
+.recipe-card-sm .img.b { background: linear-gradient(135deg, rgba(0,0,0,0.1), transparent), #D9C9A8; }
+.recipe-card-sm .img.c { background: linear-gradient(135deg, rgba(0,0,0,0.1), transparent), #C5D6D9; }
+.recipe-card-sm .body { padding: 8px 10px 10px 10px; }
+.recipe-card-sm .title { font-family: var(--font-serif), serif; font-weight: 700; font-size: 12px; color: var(--ds-ink); margin: 0 0 2px 0; }
+.recipe-card-sm .meta { font-size: 9px; color: var(--ds-muted); font-family: var(--font-mono), monospace; }
+
+/* ---------- PHONE FRAME ---------- */
+.phones-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  break-inside: avoid;
+}
+.phone {
+  background: var(--ds-ink);
+  border-radius: 26px;
+  padding: 8px;
+  width: 240px;
+  height: 480px;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 10px 28px rgba(44,42,40,0.18);
+  break-inside: avoid;
+}
+.phone .notch {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 18px;
+  background: var(--ds-ink);
+  border-radius: 0 0 12px 12px;
+  z-index: 5;
+}
+.phone .screen {
+  width: 100%;
+  height: 100%;
+  background: var(--ds-cream);
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.phone .statusbar {
+  height: 22px;
+  background: var(--ds-teal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  color: #fff;
+  font-size: 8px;
+  font-family: var(--font-mono), monospace;
+}
+.phone .app-nav {
+  background: var(--ds-teal);
+  padding: 8px 12px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.phone .app-nav .brand { font-family: var(--font-serif), serif; font-weight: 800; font-size: 12px; }
+.phone .app-nav .brand .accent { color: var(--ds-pink); font-style: italic; font-weight: 500; }
+.phone .app-nav .burger {
+  width: 16px;
+  height: 12px;
+  border-top: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  position: relative;
+}
+.phone .app-nav .burger::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #fff;
+}
+.phone .app-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+}
+.phone .app-hero {
+  height: 100px;
+  background:
+    linear-gradient(135deg, rgba(61,113,124,0.6), rgba(224,122,59,0.4)),
+    var(--ds-oat);
+  padding: 10px 12px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.phone .app-hero .t { font-family: var(--font-serif), serif; font-weight: 700; font-size: 14px; line-height: 1.1; }
+.phone .app-hero .t .ital { font-style: italic; color: var(--ds-pink); }
+.phone .app-hero .cta { background: var(--ds-spice); color: #fff; font-size: 8.5px; padding: 4px 9px; border-radius: 999px; width: max-content; margin-top: 6px; font-weight: 600; }
+.phone .pills-scroll {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  overflow-x: hidden;
+}
+.phone .pill-sm {
+  background: var(--ds-pink-soft);
+  color: #8B4933;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.phone .pill-sm.t { background: var(--ds-teal-tint); color: var(--ds-teal-dark); }
+.phone .feed {
+  padding: 0 12px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.phone .feed-card {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  gap: 0;
+}
+.phone .feed-card .img {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.08), transparent), var(--ds-pink-soft);
+  flex-shrink: 0;
+}
+.phone .feed-card .img.b { background: linear-gradient(135deg, rgba(0,0,0,0.08), transparent), #D9C9A8; }
+.phone .feed-card .img.c { background: linear-gradient(135deg, rgba(0,0,0,0.08), transparent), #C5D6D9; }
+.phone .feed-card .body { padding: 7px 9px; flex: 1; }
+.phone .feed-card .title { font-family: var(--font-serif), serif; font-weight: 700; font-size: 10.5px; color: var(--ds-ink); margin: 0; line-height: 1.1; }
+.phone .feed-card .meta { font-size: 8px; color: var(--ds-muted); font-family: var(--font-mono), monospace; margin-top: 3px; }
+.phone .tabbar {
+  background: #fff;
+  border-top: 1px solid var(--ds-border);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0 8px 0;
+  font-size: 8px;
+  color: var(--ds-muted);
+}
+.phone .tabbar .tab { text-align: center; }
+.phone .tabbar .tab.active { color: var(--ds-teal); font-weight: 600; }
+.phone .tabbar .tab .ic {
+  width: 14px;
+  height: 14px;
+  margin: 0 auto 2px;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+}
+.phone .tabbar .tab.active .ic { background: var(--ds-teal-tint); border-color: var(--ds-teal); }
+
+/* phone (recipe detail variant) */
+.phone .back-bar {
+  background: #fff;
+  border-bottom: 1px solid var(--ds-border);
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+  font-size: 9px;
+  color: var(--ds-ink);
+  font-weight: 600;
+  gap: 8px;
+}
+.phone .back-bar .back { color: var(--ds-teal); }
+.phone .back-bar .save { margin-left: auto; color: var(--ds-pink); }
+.phone .rd-hero {
+  height: 110px;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%),
+    var(--ds-pink-soft);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px;
+  color: #fff;
+}
+.phone .rd-hero .t { font-family: var(--font-serif), serif; font-weight: 700; font-size: 14px; line-height: 1.05; }
+.phone .rd-hero .m { font-size: 8px; font-family: var(--font-mono), monospace; margin-top: 4px; opacity: 0.9; }
+.phone .rd-section {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--ds-border);
+}
+.phone .rd-section .h { font-family: var(--font-mono), monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ds-teal); font-weight: 700; margin-bottom: 5px; }
+.phone .rd-section .ing { font-size: 9px; color: var(--ds-ink); line-height: 1.45; }
+.phone .rd-section .step { font-size: 9px; color: var(--ds-ink); line-height: 1.4; display: flex; gap: 6px; margin-bottom: 4px; }
+.phone .rd-section .step .n { background: var(--ds-teal); color: #fff; width: 14px; height: 14px; border-radius: 50%; text-align: center; font-size: 8px; font-weight: 700; flex-shrink: 0; }
+.phone .sticky-cta {
+  background: var(--ds-spice);
+  color: #fff;
+  padding: 9px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+.phone-caption {
+  text-align: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+  margin-top: 10px;
+}
+
+/* ---------- IMAGERY TREATMENTS ---------- */
+.photo-thumb {
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--ds-border);
+  background: var(--ds-oat);
+}
+.photo-thumb .label-tag {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(255,255,255,0.95);
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ds-ink);
+  font-weight: 600;
+}
+.photo-thumb.hero   { background: radial-gradient(circle at 35% 40%, var(--ds-pink) 0%, var(--ds-spice) 70%); }
+.photo-thumb.cuisine{ background: radial-gradient(circle at 50% 50%, var(--ds-teal-light) 0%, var(--ds-teal) 70%); }
+.photo-thumb.step   { background: radial-gradient(circle at 30% 50%, var(--ds-pink-soft) 0%, var(--ds-oat) 80%); }
+.photo-thumb.author { background: radial-gradient(circle at 50% 40%, var(--ds-oat) 0%, var(--ds-spice-soft) 80%); }
+
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  break-inside: avoid;
+}
+.do-dont .col {
+  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid;
+}
+.do-dont .do   { background: #EDF2E3; border-color: #C9D4B5; }
+.do-dont .dont { background: #FBEEE7; border-color: #F0C9B5; }
+.do-dont .h { font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.do-dont .do .h { color: #4F6026; }
+.do-dont .dont .h { color: #A2461F; }
+.do-dont ul { margin: 0; padding-left: 16px; font-size: 11.5px; line-height: 1.55; color: var(--ds-ink); }
+.do-dont li { margin-bottom: 3px; }
+
+/* ---------- VOICE PAIRS ---------- */
+.voice-pair {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  break-inside: avoid;
+}
+.voice-pair .context {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.voice-pair .row { display: flex; gap: 12px; }
+.voice-pair .row .col { flex: 1; }
+.voice-pair .good { background: #EDF2E3; padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #2C2A28; border-left: 3px solid var(--ds-success); }
+.voice-pair .bad  { background: #FBEEE7; padding: 8px 10px; border-radius: 6px; font-size: 12px; color: #2C2A28; border-left: 3px solid var(--ds-danger); text-decoration: line-through; text-decoration-color: rgba(199,93,59,0.4); }
+.voice-pair .tag-l { font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ds-muted); margin-bottom: 4px; }
+.voice-pair .tag-l.good { color: var(--ds-success); }
+.voice-pair .tag-l.bad  { color: var(--ds-danger); }
+
+/* ---------- TAGLINE OPTIONS ---------- */
+.tagline-card {
+  background: #fff;
+  border: 1px solid var(--ds-border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  break-inside: avoid;
+  position: relative;
+}
+.tagline-card.featured { background: var(--ds-teal-tint); border-color: #C8D7DC; }
+.tagline-card .badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--ds-spice);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.tagline-card .badge.current { background: var(--ds-teal); }
+.tagline-card .text {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--ds-teal);
+  line-height: 1.15;
+  max-width: 80%;
+}
+.tagline-card .rationale {
+  font-size: 11.5px;
+  color: var(--ds-muted);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.tagline-card .use-case {
+  margin-top: 10px;
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-spice);
+  font-weight: 600;
+}
+
+/* ---------- SPACING DIAGRAM ---------- */
+.spacing-vis {
+  display: flex;
+  gap: 0;
+  align-items: flex-end;
+  margin-bottom: 12px;
+  break-inside: avoid;
+}
+.spacing-vis .bar {
+  background: var(--ds-teal);
+  width: 24px;
+  margin-right: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  color: #fff;
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  padding: 4px 0;
+}
+.spacing-vis .val {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: var(--ds-muted);
+  margin-bottom: 3px;
+}
+
+/* ---------- ENDING ---------- */
+.ending {
+  width: 794px;
+  height: 1123px;
+  box-sizing: border-box;
+  background: var(--ds-teal);
+  color: #fff;
+  position: relative;
+  clip-path: inset(0);
+  break-before: page;
+  padding: 70px 70px 60px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.ending::before {
+  content: "";
+  position: absolute;
+  top: 80px;
+  right: -160px;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: var(--ds-pink);
+  opacity: 0.85;
+}
+.ending::after {
+  content: "";
+  position: absolute;
+  bottom: -160px;
+  left: -160px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: var(--ds-spice);
+  opacity: 0.85;
+}
+.ending .content { position: relative; z-index: 2; max-width: 560px; }
+.ending .tag { font-family: var(--font-mono), monospace; font-size: 11px; letter-spacing: 0.22em; color: var(--ds-pink); text-transform: uppercase; }
+.ending .big {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 96px;
+  line-height: 0.95;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 18px 0 14px 0;
+}
+.ending .sub { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.85); max-width: 420px; line-height: 1.5; }
+.ending .meta {
+  position: absolute;
+  bottom: 60px;
+  left: 70px;
+  right: 70px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  z-index: 2;
+}
+
+/* ---------- MISC ---------- */
+.divider { height: 1px; background: var(--ds-border); margin: 10px 0; }
+.kbd { font-family: var(--font-mono), monospace; font-size: 10px; background: var(--ds-oat); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--ds-border); color: var(--ds-ink); }
+ul.bullets { margin: 0 0 10px 0; padding-left: 18px; }
+ul.bullets li { margin-bottom: 4px; font-size: 12.5px; line-height: 1.55; color: var(--ds-ink); }
+ul.bullets li::marker { color: var(--ds-teal); }
+.callout {
+  background: var(--ds-pink-soft);
+  border-left: 4px solid var(--ds-spice);
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  margin-bottom: 12px;
+  break-inside: avoid;
+}
+.callout .h { font-family: var(--font-serif), serif; font-weight: 700; font-size: 13px; color: #8B4933; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     COVER PAGE
+     ========================================================= -->
+<div class="cover">
+  <div class="top-row">
+    <div class="tag">Brand Book</div>
+    <div class="version">v2.0 &nbsp;·&nbsp; Nov 2026</div>
+  </div>
+
+  <div class="center">
+    <div class="wordmark">Dish<span class="accent">Swapp</span></div>
+    <div class="subtitle">Brand, design system &amp; component library for the Astro&nbsp;+&nbsp;Bootstrap makeover.</div>
+    <div class="tagline">Collect, Collaborate, Cook.</div>
+  </div>
+
+  <div class="bottom">
+    <div style="background:#fff;padding:16px 18px;border-radius:12px;display:flex;flex-direction:column;gap:10px;width:max-content;border:1px solid var(--ds-border);box-shadow:0 4px 16px rgba(44,42,40,0.08)">
+      <div class="swatch-strip">
+        <div style="background:#E07A3B"></div>
+        <div style="background:#F9B7A4"></div>
+        <div style="background:#3D717C"></div>
+        <div style="background:#EFE5D4;border:1px solid #E5DDD0"></div>
+        <div style="background:#2C2A28"></div>
+      </div>
+      <div class="edition" style="margin-top:0;width:300px">
+        <span>Edition One · Nov 2026</span>
+        <span>For the DishSwapp maintainers</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     MAIN CONTENT (continuous flow)
+     ========================================================= -->
+<div class="main-content">
+
+<!-- ==================== SECTION 1 — WELCOME ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">01 &nbsp;·&nbsp; Welcome</div>
+      <h2 class="section-title" style="margin-top:4px">About this book</h2>
+    </div>
+    <div class="label">Edition One · Nov 2026</div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <p class="body-text lead">DishSwapp is an open-source collaborative recipe site &mdash; a place where home cooks collect, swap and improve recipes together. The current site is a React + Bootstrap 5 single-page app backed by Sanity CMS and Clerk auth. It works, but the visual layer has accreted one component at a time: the same two custom properties (<span class="kbd">--pink</span> <span class="kbd">--blue</span>) repeated across eleven CSS files, a light/dark toggle bolted onto a Bootstrap jumbotron, and a single tagline doing all the heavy lifting.</p>
+      <p class="body-text">This book is the design source-of-truth for the makeover. It keeps what already works &mdash; the peachy-pink&nbsp;<span style="color:#E07A3B;font-weight:600">#F9B7A4</span> and deep teal&nbsp;<span style="color:#3D717C;font-weight:600">#3D717C</span>, the Playfair headlines, the warm, kitchen-table voice &mdash; and extends them into a full, token-driven system that survives a real framework migration to Astro + Bootstrap 5.3.</p>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:8px">How to use this book</div>
+      <ul class="bullets">
+        <li><strong>Sections 02&ndash;04</strong> &mdash; read once, share with new contributors. Sets mission, voice, personality.</li>
+        <li><strong>Sections 05&ndash;09</strong> &mdash; the visual identity. Reference when designing any new page or component.</li>
+        <li><strong>Sections 10&ndash;12</strong> &mdash; component specs. Implement verbatim in Astro components.</li>
+        <li><strong>Sections 13&ndash;14</strong> &mdash; iconography and photography. Hand to icon designers and photo editors.</li>
+        <li><strong>Sections 15&ndash;16</strong> &mdash; voice and messaging. Reference when writing UI copy.</li>
+        <li><strong>Sections 17&ndash;19</strong> &mdash; mockups. Use as visual contract for the implementation.</li>
+        <li><strong>Section 20</strong> &mdash; ready-to-paste tokens. Drop straight into <span class="kbd">src/styles/tokens.scss</span>.</li>
+      </ul>
+      <div class="callout">
+        <div class="h">A note on scope</div>
+        This document does not specify the Sanity content model, Clerk auth flows, or deployment. It is a brand &amp; front-end design system only.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 2 — BRAND FOUNDATION ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">02 &nbsp;·&nbsp; Brand foundation</div>
+      <h2 class="section-title" style="margin-top:4px">Mission, vision, values</h2>
+      <div class="section-eyebrow">Why DishSwapp exists, and what it stands for.</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:14px">
+    <div class="card tinted">
+      <div class="label">Mission</div>
+      <div class="card-title" style="margin-top:4px">A shared kitchen, not a walled garden.</div>
+      <p class="card-body">DishSwapp helps home cooks discover, save and improve recipes together &mdash; out in the open, for free, forever. Every recipe is a starting point; every cook is a potential contributor.</p>
+    </div>
+    <div class="card oat">
+      <div class="label">Vision</div>
+      <div class="card-title" style="margin-top:4px">The cookbook the internet writes together.</div>
+      <p class="card-body">A world where the best version of any recipe is the one a hundred cooks have already improved on &mdash; with notes, swaps and step-by-step photos that an algorithm could never have written.</p>
+    </div>
+  </div>
+
+  <div class="label" style="margin-bottom:8px">Four values</div>
+  <div class="four-col">
+    <div class="card">
+      <div class="card-title" style="color:#3D717C">Open</div>
+      <p class="card-body">Source, content and roadmap are public. We default to sharing. We never paywall what the community built.</p>
+      <div style="margin-top:6px;font-size:10.5px;color:#6B6661;font-style:italic">Behaves like: a public roadmap, RFCs in the repo, MIT-licensed code.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#3D717C">Collaborative</div>
+      <p class="card-body">Recipes are improved in public. Forks, comments and version history are first-class, not afterthoughts.</p>
+      <div style="margin-top:6px;font-size:10.5px;color:#6B6661;font-style:italic">Behaves like: inline comments on steps, &ldquo;I tried this&rdquo; threads.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#3D717C">Curious</div>
+      <p class="card-body">We treat every cuisine, diet and skill level as equally worth exploring. No snobbery, no gatekeeping.</p>
+      <div style="margin-top:6px;font-size:10.5px;color:#6B6661;font-style:italic">Behaves like: cuisines side-by-side, not ranked; beginner-friendly language.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#3D717C">Generous</div>
+      <p class="card-body">We credit, we link back, we assume good faith. The product is a gift, not a funnel.</p>
+      <div style="margin-top:6px;font-size:10.5px;color:#6B6661;font-style:italic">Behaves like: author bylines, source links on adapted recipes, no dark patterns.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 3 — PERSONALITY ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">03 &nbsp;·&nbsp; Personality</div>
+      <h2 class="section-title" style="margin-top:4px">Warm home-cook positioning</h2>
+      <div class="section-eyebrow">Five axes that pin the brand between opposing extremes.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="slider-row">
+      <div class="left">Reserved</div>
+      <div class="track" data-pos="35"></div>
+      <div class="right">Friendly</div>
+    </div>
+    <div class="slider-row">
+      <div class="left">Polished</div>
+      <div class="track" data-pos="25"></div>
+      <div class="right">Homey</div>
+    </div>
+    <div class="slider-row">
+      <div class="left">Serious</div>
+      <div class="track" data-pos="35"></div>
+      <div class="right">Playful</div>
+    </div>
+    <div class="slider-row">
+      <div class="left">Exclusive</div>
+      <div class="track" data-pos="15"></div>
+      <div class="right">Inviting</div>
+    </div>
+    <div class="slider-row" style="border-bottom:none">
+      <div class="left">Aspirational</div>
+      <div class="track" data-pos="25"></div>
+      <div class="right">Real</div>
+    </div>
+  </div>
+
+  <table class="voice">
+    <thead>
+      <tr><th style="width:50%">DishSwapp sounds like&hellip;</th><th style="width:50%">DishSwapp does NOT sound like&hellip;</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>&ldquo;Let&rsquo;s cook something good together.&rdquo;</td><td>&ldquo;Leverage our community-driven recipe platform.&rdquo;</td></tr>
+      <tr><td>&ldquo;Save this for later, or swap an ingredient.&rdquo;</td><td>&ldquo;Bookmark this content and customize your experience.&rdquo;</td></tr>
+      <tr><td>&ldquo;Tried this with chickpeas instead &mdash; worked great.&rdquo;</td><td>&ldquo;User has submitted a variant. View submission.&rdquo;</td></tr>
+      <tr><td>&ldquo;Hungry? Start with Italian tonight.&rdquo;</td><td>&ldquo;Discover authentic Italian recipes that will transport you to the Mediterranean coast.&rdquo;</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== SECTION 4 — LOGO SYSTEM ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">04 &nbsp;·&nbsp; Logo system</div>
+      <h2 class="section-title" style="margin-top:4px">The DishSwapp mark</h2>
+      <div class="section-eyebrow">Wordmark, symbol, clear-space, minimum size, favicon.</div>
+    </div>
+  </div>
+
+  <div class="logo-grid" style="margin-bottom:14px">
+    <div class="logo-cell cream">
+      <div class="wordmark-lg">Dish<span class="accent">Swapp</span></div>
+      <div class="lockup-name">01 · Primary wordmark</div>
+    </div>
+    <div class="logo-cell dark">
+      <div class="wordmark-lg on-dark">Dish<span class="accent">Swapp</span></div>
+      <div class="lockup-name">02 · Reversed (on teal)</div>
+    </div>
+    <div class="logo-cell">
+      <div class="wordmark-lg mono">Dish<span class="accent">Swapp</span></div>
+      <div class="lockup-name">03 · Monochrome (ink)</div>
+    </div>
+    <div class="logo-cell cream">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <defs>
+          <path id="loop" d="M 20 40 A 18 18 0 1 1 56 40" fill="none" stroke="#3D717C" stroke-width="6" stroke-linecap="round"/>
+        </defs>
+        <use href="#loop"/>
+        <use href="#loop" transform="rotate(180 38 40)" stroke="#E07A3B"/>
+        <line x1="40" y1="22" x2="40" y2="58" stroke="#2C2A28" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="lockup-name">04 · Symbol (swap loop)</div>
+    </div>
+    <div class="logo-cell">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#3D717C"/><path d="M 10 20 A 9 9 0 1 1 28 20" fill="none" stroke="#F9B7A4" stroke-width="3.5" stroke-linecap="round"/><path d="M 30 20 A 9 9 0 1 1 12 20" fill="none" stroke="#E07A3B" stroke-width="3.5" stroke-linecap="round"/></svg>
+        <div class="wordmark-lg" style="font-size:22px">Dish<span class="accent">Swapp</span></div>
+      </div>
+      <div class="lockup-name">05 · Horizontal lockup</div>
+    </div>
+    <div class="logo-cell">
+      <div style="display:flex;gap:6px">
+        <svg width="56" height="56" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#3D717C"/><path d="M 10 20 A 9 9 0 1 1 28 20" fill="none" stroke="#F9B7A4" stroke-width="3.5" stroke-linecap="round"/><path d="M 30 20 A 9 9 0 1 1 12 20" fill="none" stroke="#E07A3B" stroke-width="3.5" stroke-linecap="round"/></svg>
+        <svg width="32" height="32" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#3D717C"/><path d="M 10 20 A 9 9 0 1 1 28 20" fill="none" stroke="#F9B7A4" stroke-width="4" stroke-linecap="round"/><path d="M 30 20 A 9 9 0 1 1 12 20" fill="none" stroke="#E07A3B" stroke-width="4" stroke-linecap="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#3D717C"/><path d="M 10 20 A 9 9 0 1 1 28 20" fill="none" stroke="#F9B7A4" stroke-width="5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="lockup-name">06 · Favicon / app icon scale</div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="label">Clear-space</div>
+      <p class="card-body" style="margin-top:4px">Maintain at least <strong>1× cap-height</strong> of clear space around the wordmark on every side. Nothing &mdash; not photography, not other UI, not the page edge &mdash; may enter this zone.</p>
+    </div>
+    <div class="card">
+      <div class="label">Minimum size</div>
+      <p class="card-body" style="margin-top:4px"><strong>24 px</strong> digital for the wordmark. The symbol alone can go down to <strong>16 px</strong> (favicon). Print: <strong>20 mm</strong> wide. Below these, the swap-loop detail collapses.</p>
+    </div>
+    <div class="card">
+      <div class="label">Don&rsquo;t</div>
+      <p class="card-body" style="margin-top:4px">Don&rsquo;t recolor the wordmark outside the documented palette. Don&rsquo;t stretch, rotate, or add drop-shadows. Don&rsquo;t place the ink wordmark on a photo without the cream/teal plate behind it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 5 — COLOR PRIMARY ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">05 &nbsp;·&nbsp; Color &mdash; primary palette</div>
+      <h2 class="section-title" style="margin-top:4px">A refined, extended family</h2>
+      <div class="section-eyebrow">The two colors you already had, plus the supporting cast they always needed.</div>
+    </div>
+  </div>
+
+  <p class="body-text" style="margin-bottom:12px">The current site uses two colors well and only two colors &mdash; peachy-pink <span class="kbd">#F9B7A4</span> and deep teal <span class="kbd">#3D717C</span>. Both stay, unchanged. Around them we add a <strong>spice accent</strong> (<span class="kbd">#E07A3B</span>) for high-attention CTAs, two warm neutrals (cream + oat) to replace the harsh <span class="kbd">#fff</span> background, and an ink that is warmer than pure black. Five swatches, one warm family.</p>
+
+  <div class="swatch-row">
+    <div class="swatch">
+      <div class="chip" style="background:#3D717C"></div>
+      <div class="meta">
+        <div class="name">Deep Teal</div>
+        <div class="hex">#3D717C · H194 S33 L34</div>
+        <div class="role">Primary brand color. Nav, footer, primary buttons, links. The &ldquo;we mean it&rdquo; color.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#F9B7A4"></div>
+      <div class="meta">
+        <div class="name">Peachy Pink</div>
+        <div class="hex">#F9B7A4 · H16 S88 L80</div>
+        <div class="role">Warm accent. Highlights, cuisine pills, social icons, the &ldquo;Swapp&rdquo; in the wordmark.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#E07A3B"></div>
+      <div class="meta">
+        <div class="name">Spice</div>
+        <div class="hex">#E07A3B · H22 S73 L55</div>
+        <div class="role">CTA accent. Primary call-to-action buttons, annotation pins, the &ldquo;Start cooking&rdquo; sticky bar.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#FBF7F1"></div>
+      <div class="meta">
+        <div class="name">Cream</div>
+        <div class="hex">#FBF7F1 · H38 S50 L96</div>
+        <div class="role">Page background. Replaces #ffffff everywhere &mdash; softer on the eyes for long recipe reads.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#2C2A28"></div>
+      <div class="meta">
+        <div class="name">Ink</div>
+        <div class="hex">#2C2A28 · H24 S5 L17</div>
+        <div class="role">Body text and headings. Warmer than #000 &mdash; never use pure black on cream.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swatch-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="swatch">
+      <div class="chip" style="background:#EFE5D4"></div>
+      <div class="meta">
+        <div class="name">Oat</div>
+        <div class="hex">#EFE5D4 · H39 S41 L89</div>
+        <div class="role">Section background, card highlight, hover fill.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#5A8E97"></div>
+      <div class="meta">
+        <div class="name">Teal Light</div>
+        <div class="hex">#5A8E97 · H188 S26 L48</div>
+        <div class="role">Secondary illustrations, hover state on primary buttons.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#6B6661"></div>
+      <div class="meta">
+        <div class="name">Muted</div>
+        <div class="hex">#6B6661 · H24 S4 L39</div>
+        <div class="role">Secondary text, meta labels, captions. Always passes WCAG AA on cream.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background:#E5DDD0"></div>
+      <div class="meta">
+        <div class="name">Border</div>
+        <div class="hex">#E5DDD0 · H36 S24 L86</div>
+        <div class="role">Hairlines, card edges, divider rules. The only border color in the system.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 6 — COLOR TOKENS ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">06 &nbsp;·&nbsp; Color &mdash; tokens, ratios &amp; contrast</div>
+      <h2 class="section-title" style="margin-top:4px">Naming, usage, and Bootstrap mapping</h2>
+      <div class="section-eyebrow">How the palette becomes code.</div>
+    </div>
+  </div>
+
+  <table class="tokens">
+    <thead>
+      <tr><th>Token</th><th>Hex</th><th>Role</th><th>Bootstrap 5 var</th><th>Tier</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="kbd">--ds-teal</span></td><td class="mono">#3D717C</td><td>Primary brand, nav, footer, links</td><td class="mono">$primary</td><td>M · 5&ndash;20%</td></tr>
+      <tr><td><span class="kbd">--ds-pink</span></td><td class="mono">#F9B7A4</td><td>Highlight, cuisine pills, social icons</td><td class="mono">$accent</td><td>S · 1&ndash;5%</td></tr>
+      <tr><td><span class="kbd">--ds-spice</span></td><td class="mono">#E07A3B</td><td>Primary CTA, sticky action bar</td><td class="mono">$emphasis</td><td>XS · &lt;1%</td></tr>
+      <tr><td><span class="kbd">--ds-cream</span></td><td class="mono">#FBF7F1</td><td>Page background</td><td class="mono">$body-bg</td><td>XL · &gt;50%</td></tr>
+      <tr><td><span class="kbd">--ds-oat</span></td><td class="mono">#EFE5D4</td><td>Section bg, card highlight, hover fill</td><td class="mono">$secondary-bg</td><td>L · 20&ndash;50%</td></tr>
+      <tr><td><span class="kbd">--ds-ink</span></td><td class="mono">#2C2A28</td><td>Body text, headings</td><td class="mono">$body-color</td><td>&mdash;</td></tr>
+      <tr><td><span class="kbd">--ds-muted</span></td><td class="mono">#6B6661</td><td>Secondary text, meta</td><td class="mono">$text-muted</td><td>&mdash;</td></tr>
+      <tr><td><span class="kbd">--ds-border</span></td><td class="mono">#E5DDD0</td><td>Hairlines, dividers, card edges</td><td class="mono">$border-color</td><td>S</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col">
+    <div>
+      <div class="label" style="margin-bottom:8px">60 / 30 / 10 usage ratio</div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;height:36px;border-radius:6px;overflow:hidden">
+            <div style="flex:60;background:#FBF7F1;border:1px solid #E5DDD0;display:flex;align-items:center;padding-left:10px;font-family: var(--font-mono), sans-serif;font-size:10px;color:#2C2A28">60% &mdash; Cream</div>
+            <div style="flex:30;background:#3D717C;display:flex;align-items:center;padding-left:10px;font-family: var(--font-mono), sans-serif;font-size:10px;color:#fff">30% &mdash; Teal</div>
+            <div style="flex:10;background:#F9B7A4;display:flex;align-items:center;padding-left:6px;font-family: var(--font-mono), sans-serif;font-size:9px;color:#2C2A28">10%</div>
+          </div>
+          <div style="font-size:11px;color:#6B6661;line-height:1.5">Cream is the canvas. Teal is the structural color (nav, footer, headings, primary buttons). Pink + spice together are the &lt;10% &ldquo;look at this&rdquo; accent. <strong>Never invert this ratio</strong> &mdash; teal as a page background is exhausting at length.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:8px">WCAG contrast (most-used pairs)</div>
+      <table class="contrast">
+        <thead><tr><th>Pair</th><th>Ratio</th><th>AA</th><th>AAA</th></tr></thead>
+        <tbody>
+          <tr><td>Ink on Cream</td><td class="mono">12.6 : 1</td><td class="pass">pass</td><td class="pass">pass</td></tr>
+          <tr><td>Muted on Cream</td><td class="mono">5.8 : 1</td><td class="pass">pass</td><td class="pass">pass</td></tr>
+          <tr><td>White on Teal</td><td class="mono">5.6 : 1</td><td class="pass">pass</td><td class="pass">pass</td></tr>
+          <tr><td>White on Spice</td><td class="mono">3.4 : 1</td><td class="pass">pass</td><td class="fail">fail</td></tr>
+          <tr><td>Ink on Pink</td><td class="mono">3.1 : 1</td><td class="pass">pass</td><td class="fail">fail</td></tr>
+          <tr><td>Pink on Teal</td><td class="mono">3.0 : 1</td><td class="pass">pass</td><td class="fail">fail</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px;color:#6B6661;line-height:1.5">Pink on teal works for large text (≥18.66px bold / ≥24px regular) only. Use it for the wordmark accent and cuisine pills, not for body copy.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 7 — TYPOGRAPHY SYSTEM ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">07 &nbsp;·&nbsp; Typography &mdash; type system</div>
+      <h2 class="section-title" style="margin-top:4px">Playfair Display + Inter + JetBrains Mono</h2>
+      <div class="section-eyebrow">Two families for content, one for code &mdash; nothing else.</div>
+    </div>
+  </div>
+
+  <div class="specimen">
+    <div class="family">Display · Playfair Display</div>
+    <div class="aa">Aa</div>
+    <div class="pangram">Collect, collaborate, cook &mdash; a quiet, confident serif headline. 0,400 / 0,500 / 0,600 / 0,700 / 0,800 / 0,900 + italics.</div>
+  </div>
+  <div class="specimen sans">
+    <div class="family">UI · Inter</div>
+    <div class="aa">Aa</div>
+    <div class="pangram">The workhorse. Body, UI, buttons, captions, code comments &mdash; everything that is not a headline. 0,300 / 0,400 / 0,500 / 0,600 / 0,700 / 0,800 / 0,900.</div>
+  </div>
+  <div class="specimen mono">
+    <div class="family">Mono · JetBrains Mono</div>
+    <div class="aa">Aa</div>
+    <div class="pangram">Tokens, recipe timers, ingredient quantities, code. Tabular figures by default. 0,400 / 0,500 / 0,700.</div>
+  </div>
+
+  <table class="scale">
+    <thead><tr><th>Role</th><th>Family · weight</th><th>Size</th><th>Line</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>Display H1</td><td>Playfair · 700</td><td class="mono">48 / 56</td><td>1.05</td><td>Hero headlines only, one per page.</td></tr>
+      <tr><td>H2</td><td>Playfair · 700</td><td class="mono">32 / 36</td><td>1.10</td><td>Section titles, recipe titles.</td></tr>
+      <tr><td>H3</td><td>Playfair · 600</td><td class="mono">22 / 28</td><td>1.20</td><td>Subsections, card titles.</td></tr>
+      <tr><td>H4</td><td>Inter · 700</td><td class="mono">16 / 22</td><td>1.30</td><td>Group labels, recipe section heads (&ldquo;Ingredients&rdquo;).</td></tr>
+      <tr><td>Body L (lead)</td><td>Inter · 400</td><td class="mono">17 / 28</td><td>1.65</td><td>Article intros, recipe headnotes.</td></tr>
+      <tr><td>Body</td><td>Inter · 400</td><td class="mono">15 / 24</td><td>1.60</td><td>Default paragraph text.</td></tr>
+      <tr><td>Body S</td><td>Inter · 400</td><td class="mono">13 / 20</td><td>1.55</td><td>UI text, recipe steps.</td></tr>
+      <tr><td>Caption</td><td>Inter · 500</td><td class="mono">12 / 18</td><td>1.50</td><td>Meta labels, photo captions.</td></tr>
+      <tr><td>Eyebrow / Label</td><td>JetBrains Mono · 500</td><td class="mono">11 / 16</td><td>1.40</td><td>Uppercase tracked labels.</td></tr>
+      <tr><td>Numeric</td><td>JetBrains Mono · 500</td><td class="mono">13</td><td>1.40</td><td>Quantities, timers, ratings. Use tabular figures (font-feature-settings: &lsquo;tnum&rsquo;).</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== SECTION 8 — TYPOGRAPHY BOOTSTRAP ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">08 &nbsp;·&nbsp; Typography &mdash; Bootstrap 5 mapping</div>
+      <h2 class="section-title" style="margin-top:4px">Drop-in SCSS overrides</h2>
+      <div class="section-eyebrow">Paste this before importing Bootstrap to wire the type system in.</div>
+    </div>
+  </div>
+
+  <div class="code"><span class="cm">// src/styles/_type.scss &mdash; loaded BEFORE Bootstrap&rsquo;s _variables.scss</span>
+<span class="va">$font-family-sans-serif</span>:   <span class="st">'Inter'</span>, system-ui, sans-serif;
+<span class="va">$font-family-serif</span>:       <span class="st">'Playfair Display'</span>, Georgia, serif;
+<span class="va">$font-family-monospace</span>:   <span class="st">'JetBrains Mono'</span>, ui-monospace, monospace;
+
+<span class="va">$font-size-base</span>:            <span class="st">1rem</span>;       <span class="cm">// 16px root</span>
+<span class="va">$font-size-lead</span>:           <span class="st">1.0625rem</span>; <span class="cm">// 17px</span>
+
+<span class="va">$headings-font-family</span>:    <span class="va">$font-family-serif</span>;
+<span class="va">$headings-font-weight</span>:    <span class="st">700</span>;
+<span class="va">$headings-color</span>:           <span class="va">$ds-ink</span>;
+
+<span class="va">$h1-font-size</span>:              <span class="st">3rem</span>;     <span class="cm">// 48px</span>
+<span class="va">$h2-font-size</span>:              <span class="st">2rem</span>;     <span class="cm">// 32px</span>
+<span class="va">$h3-font-size</span>:              <span class="st">1.375rem</span>; <span class="cm">// 22px</span>
+<span class="va">$h4-font-size</span>:              <span class="st">1rem</span>;     <span class="cm">// 16px &mdash; Inter bold</span>
+
+<span class="va">$lead-font-size</span>:           <span class="st">1.0625rem</span>;
+<span class="va">$lead-font-weight</span>:         <span class="st">400</span>;
+
+<span class="va">$link-color</span>:               <span class="va">$ds-teal</span>;
+<span class="va">$link-hover-color</span>:        <span class="va">$ds-teal-dark</span>;
+<span class="va">$link-decoration</span>:         <span class="st">underline</span>;
+<span class="va">$link-hover-decoration</span>:   <span class="st">underline</span>;
+
+<span class="cm">// Tabular figures for every numeric &mdash; recipe-critical</span>
+<span class="kw">@mixin</span> tnum { font-feature-settings: <span class="st">'tnum'</span> 1; }
+<span class="kw">.recipe-quantity</span>, <span class="kw">.timer</span>, <span class="kw">.rating</span> { <span class="kw">@include</span> tnum; }</div>
+
+  <div class="two-col">
+    <div>
+      <div class="label" style="margin-bottom:6px">When to use serif vs sans</div>
+      <ul class="bullets">
+        <li><strong>Serif (Playfair)</strong> &mdash; recipe titles, page H1s, pull-quotes, section titles, the wordmark. Italic for emphasis or pull-quotes only.</li>
+        <li><strong>Sans (Inter)</strong> &mdash; everything else. Body copy, UI, buttons, captions, meta. Never use serif inside a button or a nav item.</li>
+        <li><strong>Mono (JetBrains)</strong> &mdash; ingredient quantities, timers, ratings, code, the eyebrow labels in this book.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:6px">Pairing rules</div>
+      <ul class="bullets">
+        <li>One serif headline per page &mdash; never two competing H1s.</li>
+        <li>Serif size must always be ≥1.4× the next-largest sans on the page. Don&rsquo;t let a 22px Playfair sit next to a 16px Inter.</li>
+        <li>Never set body copy in Playfair &mdash; it&rsquo;s a display face. Body in Playfair is the #1 amateur typography mistake.</li>
+        <li>Line-height for Playfair is 1.05&ndash;1.20. For Inter body, 1.55&ndash;1.65.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 9 — SPACING & GRID ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">09 &nbsp;·&nbsp; Spacing, grid &amp; layout</div>
+      <h2 class="section-title" style="margin-top:4px">An 8-pt rhythm, 12 columns, three breakpoints</h2>
+      <div class="section-eyebrow">The structural skeleton every page is built on.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="label" style="margin-bottom:6px">Spacing scale (4-pt base, 8-pt rhythm)</div>
+      <div class="spacing-vis">
+        <div class="val">4</div><div class="bar" style="height:4px"></div>
+        <div class="val">8</div><div class="bar" style="height:8px"></div>
+        <div class="val">12</div><div class="bar" style="height:12px"></div>
+        <div class="val">16</div><div class="bar" style="height:16px"></div>
+        <div class="val">24</div><div class="bar" style="height:24px"></div>
+        <div class="val">32</div><div class="bar" style="height:32px"></div>
+        <div class="val">48</div><div class="bar" style="height:48px"></div>
+        <div class="val">64</div><div class="bar" style="height:64px"></div>
+      </div>
+      <div class="code" style="margin-top:8px"><span class="cm">// Bootstrap $spacer overrides (1rem = 16px)</span>
+<span class="va">$spacers</span>: (
+  <span class="st">0</span>: 0,  <span class="st">1</span>: <span class="st">0.25rem</span>, <span class="st">2</span>: <span class="st">0.5rem</span>,
+  <span class="st">3</span>: <span class="st">0.75rem</span>, <span class="st">4</span>: <span class="st">1rem</span>, <span class="st">5</span>: <span class="st">1.5rem</span>,
+  <span class="st">6</span>: <span class="st">2rem</span>, <span class="st">7</span>: <span class="st">3rem</span>, <span class="st">8</span>: <span class="st">4rem</span>,
+);</div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:6px">Breakpoints &amp; containers</div>
+      <table class="tokens">
+        <thead><tr><th>BP</th><th>Min</th><th>Container</th><th>Cols</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">xs</td><td class="mono">0</td><td class="mono">100%</td><td>4</td><td>Phone, single column.</td></tr>
+          <tr><td class="mono">sm</td><td class="mono">576px</td><td class="mono">540px</td><td>4</td><td>Large phone / small tablet.</td></tr>
+          <tr><td class="mono">md</td><td class="mono">768px</td><td class="mono">720px</td><td>12</td><td>Tablet, two-column.</td></tr>
+          <tr><td class="mono">lg</td><td class="mono">992px</td><td class="mono">960px</td><td>12</td><td>Small laptop.</td></tr>
+          <tr><td class="mono">xl</td><td class="mono">1200px</td><td class="mono">1140px</td><td>12</td><td>Desktop.</td></tr>
+          <tr><td class="mono">xxl</td><td class="mono">1440px</td><td class="mono">1320px</td><td>12</td><td>Wide desktop, hero mockup BP.</td></tr>
+        </tbody>
+      </table>
+      <div class="label" style="margin-top:8px;margin-bottom:6px">Radius scale</div>
+      <div style="display:flex;gap:8px;align-items:center;font-family: var(--font-mono), sans-serif;font-size:10px;color:#6B6661">
+        <div style="width:36px;height:36px;background:#3D717C;border-radius:4px"></div><span>sm · 4px</span>
+        <div style="width:36px;height:36px;background:#3D717C;border-radius:10px"></div><span>md · 10px</span>
+        <div style="width:36px;height:36px;background:#3D717C;border-radius:18px"></div><span>lg · 18px</span>
+        <div style="width:36px;height:36px;background:#3D717C;border-radius:999px"></div><span>pill</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="h">Shadow scale (3 levels)</div>
+    Use sparingly &mdash; the system is flat by default. <strong>sm</strong> <span class="kbd">0 1px 2px rgba(44,42,40,0.06)</span> for cards. <strong>md</strong> <span class="kbd">0 4px 12px rgba(44,42,40,0.08)</span> for hover lift on cards. <strong>lg</strong> <span class="kbd">0 12px 32px rgba(44,42,40,0.12)</span> for modals and the sticky CTA bar only.
+  </div>
+</div>
+
+<!-- ==================== SECTION 10 — COMPONENTS: BUTTONS / FORMS ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">10 &nbsp;·&nbsp; Components &mdash; buttons, badges &amp; forms</div>
+      <h2 class="section-title" style="margin-top:4px">The interactive primitive set</h2>
+      <div class="section-eyebrow">Four buttons, three pills, three form fields. That&rsquo;s the whole kit.</div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-bottom:8px">Buttons &mdash; default / hover / disabled</div>
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start">
+      <div>
+        <div style="margin-bottom:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;color:#6B6661;letter-spacing:0.1em;text-transform:uppercase">Primary</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="btn-demo btn-primary">Let&rsquo;s cook</span>
+          <span class="btn-demo btn-primary hover">Let&rsquo;s cook</span>
+          <span class="btn-demo btn-disabled">Let&rsquo;s cook</span>
+        </div>
+        <div style="margin-top:6px;font-size:10.5px;color:#6B6661;line-height:1.45">Teal bg, white text. Use for the one primary action on each page.</div>
+      </div>
+      <div>
+        <div style="margin-bottom:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;color:#6B6661;letter-spacing:0.1em;text-transform:uppercase">Secondary</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="btn-demo btn-secondary">Save</span>
+          <span class="btn-demo btn-secondary hover">Save</span>
+          <span class="btn-demo btn-disabled">Save</span>
+        </div>
+        <div style="margin-top:6px;font-size:10.5px;color:#6B6661;line-height:1.45">Outline teal. Secondary actions on the same page as a primary.</div>
+      </div>
+      <div>
+        <div style="margin-bottom:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;color:#6B6661;letter-spacing:0.1em;text-transform:uppercase">Spice (CTA)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="btn-demo btn-spice">Start cooking</span>
+          <span class="btn-demo btn-spice hover">Start cooking</span>
+          <span class="btn-demo btn-disabled">Start cooking</span>
+        </div>
+        <div style="margin-top:6px;font-size:10.5px;color:#6B6661;line-height:1.45">Spice bg. Once per page, only for the &ldquo;cook this&rdquo; moment.</div>
+      </div>
+      <div>
+        <div style="margin-bottom:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;color:#6B6661;letter-spacing:0.1em;text-transform:uppercase">Ghost</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="btn-demo btn-ghost">Cancel</span>
+          <span class="btn-demo btn-ghost hover">Cancel</span>
+          <span class="btn-demo btn-disabled">Cancel</span>
+        </div>
+        <div style="margin-top:6px;font-size:10.5px;color:#6B6661;line-height:1.45">Ink text, transparent. Tertiary actions, dismiss buttons.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="label" style="margin-bottom:8px">Pills &amp; badges</div>
+      <div class="card">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="pill">Italian</span>
+          <span class="pill teal">Asian</span>
+          <span class="pill spice">Mexican</span>
+          <span class="pill">Vegetarian</span>
+          <span class="pill teal">30 min</span>
+          <span class="pill spice">Trending</span>
+        </div>
+        <div style="font-size:11px;color:#6B6661;line-height:1.5">Three pill colors, three semantic roles: <strong>pink</strong> (default tag), <strong>teal</strong> (time/quantity), <strong>spice</strong> (status callout). One pill type per data axis &mdash; never mix.</div>
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:8px">Form fields</div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <label class="form-label">Email</label>
+            <input class="form-field" type="text" value="pat@cook.it" readonly>
+          </div>
+          <div>
+            <label class="form-label">Recipe title</label>
+            <input class="form-field focus" type="text" value="Grandma&rsquo;s rag&ugrave;" readonly>
+          </div>
+          <div>
+            <label class="form-label">Notes</label>
+            <textarea class="form-field" rows="2" readonly>Add a note about your swap&hellip;</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 11 — RECIPE CARD ANATOMY ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">11 &nbsp;·&nbsp; Components &mdash; recipe card anatomy</div>
+      <h2 class="section-title" style="margin-top:4px">The card the whole site is built around</h2>
+      <div class="section-eyebrow">Every list view &mdash; home, cuisine, search, cookbook &mdash; uses this one card.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="recipe-card-lg">
+      <div class="cover" style="background:linear-gradient(135deg, rgba(0,0,0,0.12), transparent 60%), #F9B7A4;position:relative">
+        <div style="position:absolute;top:10px;left:10px;display:flex;gap:6px">
+          <span class="pill" style="background:rgba(255,255,255,0.92)">Italian</span>
+          <span class="pill teal" style="background:rgba(255,255,255,0.92)">45 min</span>
+        </div>
+      </div>
+      <div class="body">
+        <h3 class="title">Grandma&rsquo;s Sunday rag&ugrave;</h3>
+        <div class="meta">
+          <span>by Patrizio</span>
+          <span>·</span>
+          <span>Serves 6</span>
+          <span>·</span>
+          <span>★ 4.8</span>
+        </div>
+        <p class="excerpt">The slow-cooked Bolognese that survived three generations and a transatlantic move. Pork and beef, a hint of nutmeg, and the trick with the milk everyone asks about.</p>
+        <div class="actions">
+          <span class="save">Save</span>
+          <div class="right">
+            <span>12 comments</span>
+            <span>Share</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:8px">Anatomy</div>
+      <table class="scale">
+        <tbody>
+          <tr><td class="mono">A</td><td>Cover image · 16:10 · min 480×300</td></tr>
+          <tr><td class="mono">B</td><td>Pill row · cuisine + cook time, top-left</td></tr>
+          <tr><td class="mono">C</td><td>Title · Playfair 700, 18px, 2-line clamp</td></tr>
+          <tr><td class="mono">D</td><td>Meta row · author · servings · rating (mono)</td></tr>
+          <tr><td class="mono">E</td><td>Excerpt · Inter 11.5px, 2-line clamp</td></tr>
+          <tr><td class="mono">F</td><td>Action row · Save (left) · comments + share (right)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <div class="h">Hover state</div>
+        Card lifts (translateY −2px), shadow goes from <span class="kbd">sm</span> to <span class="kbd">md</span>, cover image scales 1.03 over 200ms. The card is the click target &mdash; the entire card is a link, not just the title.
+      </div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-top:14px;margin-bottom:8px">Three-up grid (cuisine row pattern)</div>
+  <div class="recipe-card-grid">
+    <div class="recipe-card-sm">
+      <div class="img a"></div>
+      <div class="body"><div class="title">Cacio e Pepe</div><div class="meta">by Lila · 20 min</div></div>
+    </div>
+    <div class="recipe-card-sm">
+      <div class="img b"></div>
+      <div class="body"><div class="title">Tinga de Pollo</div><div class="meta">by Marco · 50 min</div></div>
+    </div>
+    <div class="recipe-card-sm">
+      <div class="img c"></div>
+      <div class="body"><div class="title">Maple Glazed Salmon</div><div class="meta">by Yuki · 25 min</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 12 — ICONOGRAPHY ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">12 &nbsp;·&nbsp; Iconography</div>
+      <h2 class="section-title" style="margin-top:4px">Line icons, 1.5 px stroke, rounded caps</h2>
+      <div class="section-eyebrow">Hand-drawn from the same skeleton as the swap-loop logo.</div>
+    </div>
+  </div>
+
+  <div class="icon-grid">
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg><div class="name">Search</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v17l6-4 6 4V4z"/></svg><div class="name">Save</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13 8l-5 1 1-5a9 9 0 1 1 17-4z"/></svg><div class="name">Comment</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><line x1="8" y1="11" x2="16" y2="7"/><line x1="8" y1="13" x2="16" y2="17"/></svg><div class="name">Share</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg><div class="name">Time</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg><div class="name">Servings</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E07A3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg><div class="name">Heart</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M6 12h12"/></svg><div class="name">Chef hat</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E07A3B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-1 4 1 5 0 8-1 3 1 4 0 7-1 3 1 3 0 3"/><path d="M16 5c0 3-2 4-2 6s2 2 2 4-2 2-2 4"/></svg><div class="name">Spice</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="20" y2="12"/><line x1="10" y1="18" x2="20" y2="18"/></svg><div class="name">Filter</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><div class="name">Add</div></div>
+    <div class="icon-cell"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2C2A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg><div class="name">User</div></div>
+  </div>
+
+  <div class="do-dont">
+    <div class="col do">
+      <div class="h">Do</div>
+      <ul>
+        <li>1.5 px stroke at 24 px native size</li>
+        <li>Rounded line-caps and line-joins</li>
+        <li>Monochrome ink (<span class="kbd">#2C2A28</span>) by default; spice (<span class="kbd">#E07A3B</span>) for the &ldquo;love&rdquo; and &ldquo;spice&rdquo; metaphors only</li>
+        <li>Inherit current text color when used inline</li>
+      </ul>
+    </div>
+    <div class="col dont">
+      <div class="h">Don&rsquo;t</div>
+      <ul>
+        <li>Filled (solid) icon variants &mdash; the system is line-only</li>
+        <li>1 px hairline stroke &mdash; vanishes at 16 px</li>
+        <li>Clip-art / Lucide outline-without-modification icons</li>
+        <li>Multiple accent colors in one icon set</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 13 — IMAGERY ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">13 &nbsp;·&nbsp; Imagery &amp; art direction</div>
+      <h2 class="section-title" style="margin-top:4px">Photography that looks like a real kitchen</h2>
+      <div class="section-eyebrow">Warm light, real plates, hands in frame. No stock-photo plastic.</div>
+    </div>
+  </div>
+
+  <p class="body-text" style="margin-bottom:12px">All photography is treated with the same warm grade &mdash; lifted shadows, warm whites, soft contrast &mdash; so that contributed photos from many cameras sit together on the page without looking like a collage. The color treatment does the heavy lifting; the photographer only needs to capture real food on real plates.</p>
+
+  <div class="four-col" style="margin-bottom:12px">
+    <div>
+      <div class="photo-thumb hero"></div>
+      <div style="margin-top:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:#3D717C;font-weight:700">Hero · 16:9</div>
+      <div style="font-size:10.5px;color:#6B6661;line-height:1.45">Top-down or 45&deg;, full-bleed. One dish, no props except the plate.</div>
+    </div>
+    <div>
+      <div class="photo-thumb cuisine"></div>
+      <div style="margin-top:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:#3D717C;font-weight:700">Cuisine card · 4:3</div>
+      <div style="font-size:10.5px;color:#6B6661;line-height:1.45">A signature dish for the cuisine, single subject, warm tone.</div>
+    </div>
+    <div>
+      <div class="photo-thumb step"></div>
+      <div style="margin-top:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:#3D717C;font-weight:700">Step · 1:1</div>
+      <div style="font-size:10.5px;color:#6B6661;line-height:1.45">Hands and pan in frame. Shows the action, not the result.</div>
+    </div>
+    <div>
+      <div class="photo-thumb author"></div>
+      <div style="margin-top:6px;font-family: var(--font-mono), sans-serif;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;color:#3D717C;font-weight:700">Author · 1:1</div>
+      <div style="font-size:10.5px;color:#6B6661;line-height:1.45">In their kitchen, natural light, no logo overlay. Real person.</div>
+    </div>
+  </div>
+
+  <div class="do-dont">
+    <div class="col do">
+      <div class="h">Do</div>
+      <ul>
+        <li>Natural light, near a window. No flash, no ring-light.</li>
+        <li>Real plates, real cutlery, real surfaces. The point is authenticity.</li>
+        <li>Hands in frame where it makes sense &mdash; stirring, plating, tearing bread.</li>
+        <li>Crop tight on the food. The dish is the subject, not the kitchen.</li>
+        <li>Warm white balance. Cream should always look cream, not blue.</li>
+      </ul>
+    </div>
+    <div class="col dont">
+      <div class="h">Don&rsquo;t</div>
+      <ul>
+        <li>Stock photo plastic food &mdash; glossy, perfect, unattainable.</li>
+        <li>Harsh flash or any blue-white color temperature.</li>
+        <li>Cluttered backgrounds, dirty dishes, brand-name packaging.</li>
+        <li>Filters that crush blacks or push saturation past the warm grade.</li>
+        <li>Watermarks from recipe blogs. Credit the author in the byline instead.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:12px">
+    <div class="h">Crop ratios</div>
+    Hero <span class="kbd">16:9</span> · Cuisine card <span class="kbd">4:3</span> · Recipe card <span class="kbd">16:10</span> · Step <span class="kbd">1:1</span> · Author <span class="kbd">1:1</span> · Social share <span class="kbd">4:5</span> (Instagram portrait). Never crop a 16:9 hero to a 1:1 step image &mdash; reshoot at the right ratio.
+  </div>
+</div>
+
+<!-- ==================== SECTION 14 — VOICE & TONE ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">14 &nbsp;·&nbsp; Voice &amp; tone</div>
+      <h2 class="section-title" style="margin-top:4px">Warm, generous, real, helpful</h2>
+      <div class="section-eyebrow">The kitchen-table voice, in the four places it matters most.</div>
+    </div>
+  </div>
+
+  <div class="voice-pair">
+    <div class="context">Headline</div>
+    <div class="row">
+      <div class="col"><div class="tag-l good">Use</div><div class="good">Cook what you&rsquo;ve got.</div></div>
+      <div class="col"><div class="tag-l bad">Avoid</div><div class="bad">Utilize your available ingredients.</div></div>
+    </div>
+  </div>
+  <div class="voice-pair">
+    <div class="context">Primary button</div>
+    <div class="row">
+      <div class="col"><div class="tag-l good">Use</div><div class="good">Let&rsquo;s cook</div></div>
+      <div class="col"><div class="tag-l bad">Avoid</div><div class="bad">Submit</div></div>
+    </div>
+  </div>
+  <div class="voice-pair">
+    <div class="context">Empty state</div>
+    <div class="row">
+      <div class="col"><div class="tag-l good">Use</div><div class="good">No saved recipes yet &mdash; your cookbook is hungry. Browse cuisines to start.</div></div>
+      <div class="col"><div class="tag-l bad">Avoid</div><div class="bad">You have no items.</div></div>
+    </div>
+  </div>
+  <div class="voice-pair">
+    <div class="context">Form error</div>
+    <div class="row">
+      <div class="col"><div class="tag-l good">Use</div><div class="good">That email doesn&rsquo;t look right. Want to try again?</div></div>
+      <div class="col"><div class="tag-l bad">Avoid</div><div class="bad">Invalid email format.</div></div>
+    </div>
+  </div>
+
+  <table class="voice">
+    <thead><tr><th>Use these words</th><th>Avoid these words</th></tr></thead>
+    <tbody>
+      <tr><td>Cook, swap, save, share, try, collect, contribute, fork</td><td>Leverage, utilize, content, item, submission, user (as a verb), platform</td></tr>
+      <tr><td>Cook, contributor, author, community</td><td>User, customer, consumer, lead</td></tr>
+      <tr><td>Recipe, dish, swap, cuisine</td><td>Asset, listing, offering</td></tr>
+      <tr><td>Open-source, free, public</td><td>Premium, exclusive, member-only</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== SECTION 15 — TAGLINE ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">15 &nbsp;·&nbsp; Tagline &amp; messaging</div>
+      <h2 class="section-title" style="margin-top:4px">Keep the original, with three alternatives on the bench</h2>
+      <div class="section-eyebrow">The three-word tagline stays primary. The others cover different contexts.</div>
+    </div>
+  </div>
+
+  <div class="tagline-card featured">
+    <div class="badge current">Current · keep</div>
+    <div class="text">Collect, Collaborate, Cook.</div>
+    <div class="rationale">The original three-word tagline. It already names the three core actions on the site, mirrors the alliteration that makes it stick, and reads naturally as a verb sequence. Don&rsquo;t replace it without a stronger reason than &ldquo;it feels old&rdquo;.</div>
+    <div class="use-case">Use: homepage hero, footer, app store description</div>
+  </div>
+
+  <div class="tagline-card">
+    <div class="badge">Alt A</div>
+    <div class="text">Cook together, one swap at a time.</div>
+    <div class="rationale">Leads with the verb, then explains the mechanic. Better for new visitors who don&rsquo;t yet know what &ldquo;swapping&rdquo; means in this context.</div>
+    <div class="use-case">Use: onboarding screen 1, pitch deck</div>
+  </div>
+
+  <div class="tagline-card">
+    <div class="badge">Alt B</div>
+    <div class="text">Recipes that get passed around.</div>
+    <div class="rationale">Wry, warm, community-flavored. The double meaning (passed around a table / passed around online) is the joke.</div>
+    <div class="use-case">Use: social bios, contributor recruitment page</div>
+  </div>
+
+  <div class="tagline-card">
+    <div class="badge">Alt C</div>
+    <div class="text">Your kitchen, our cookbook.</div>
+    <div class="rationale">Foregrounds the user&rsquo;s ownership of the cooking while naming the shared artifact. Best on the cookbook page itself.</div>
+    <div class="use-case">Use: cookbook empty state, &ldquo;Sign in to your cookbook&rdquo; screen</div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 16 — DESKTOP HOMEPAGE MOCKUP ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">16 &nbsp;·&nbsp; Desktop mockup &mdash; homepage</div>
+      <h2 class="section-title" style="margin-top:4px">1440 × 900 &mdash; the new front door</h2>
+      <div class="section-eyebrow">Full-bleed hero, three-cuisine row, recipe-of-the-month band, dark teal footer.</div>
+    </div>
+  </div>
+
+  <div class="browser">
+    <div class="chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url">https://dishswapp.org/</div>
+    </div>
+    <div class="viewport" style="position:relative">
+      <div class="annot" style="top:8px;left:60px">1</div>
+      <div class="annot" style="top:80px;left:30px">2</div>
+      <div class="annot" style="top:120px;right:30px">3</div>
+      <div class="annot" style="top:300px;left:30px">4</div>
+      <div class="annot" style="top:425px;left:30px">5</div>
+      <div class="annot" style="bottom:18px;left:30px">6</div>
+
+      <div class="mock-nav">
+        <div class="brand">Dish<span class="accent">Swapp</span></div>
+        <div class="links"><span>Dashboard</span><span>About</span><span>Donate</span></div>
+        <div class="login">Login / Sign up</div>
+      </div>
+
+      <div class="mock-hero">
+        <div class="h-tag">Open-source recipes</div>
+        <div class="h-title">Collect, collaborate, <span class="ital">cook.</span></div>
+        <div class="h-cta">Start exploring</div>
+      </div>
+
+      <div class="mock-cuisine-row">
+        <div class="mock-cuisine-card">
+          <div class="img"></div>
+          <div class="body">
+            <div class="title">Italian</div>
+            <div class="desc">Slow rag&ugrave;, bright pesto, perfect pasta.</div>
+          </div>
+        </div>
+        <div class="mock-cuisine-card b">
+          <div class="img"></div>
+          <div class="body">
+            <div class="title">Mexican</div>
+            <div class="desc">Tinga, mole, tacos, the works.</div>
+          </div>
+        </div>
+        <div class="mock-cuisine-card c">
+          <div class="img"></div>
+          <div class="body">
+            <div class="title">Asian</div>
+            <div class="desc">Maple salmon, miso ramen, congee.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-rotm">
+        <div>
+          <div class="label-l">Recipe of the Month</div>
+          <div class="title-l">Grandma&rsquo;s Sunday rag&ugrave;</div>
+        </div>
+        <div class="pill-l">Read &amp; cook</div>
+      </div>
+
+      <div class="mock-footer">
+        <div class="col"><div class="h">DishSwapp</div><div class="l">Open-source recipes · MIT</div></div>
+        <div class="col"><div class="h">About</div><div class="l">Project · Roadmap · Donate</div></div>
+        <div class="col"><div class="h">Follow</div><div class="l">GitHub · Twitter · RSS</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annot-list">
+    <span class="num">1</span> Teal nav, white wordmark, peachy-pink login pill &mdash; the only pink on the bar.
+    <span class="num">2</span> Hero: full-bleed food photo with 60/30/10 color usage &mdash; food is the 60%, teal overlay is the 30%.
+    <span class="num">3</span> Spice CTA &mdash; one per page, only on the hero.
+    <span class="num">4</span> Three-up cuisine row uses the recipe card primitive at 4:3 image ratio.
+    <span class="num">5</span> Recipe-of-the-month band in teal-dark for visual rhythm and to break the white page.
+    <span class="num">6</span> Footer repeats the nav palette to close the page and signal &ldquo;you&rsquo;ve reached the end.&rdquo;
+  </div>
+</div>
+
+<!-- ==================== SECTION 17 — DESKTOP RECIPE DETAIL MOCKUP ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">17 &nbsp;·&nbsp; Desktop mockup &mdash; recipe detail</div>
+      <h2 class="section-title" style="margin-top:4px">1440 × 900 &mdash; where the cooking happens</h2>
+      <div class="section-eyebrow">Hero image with title overlay, ingredients checklist, numbered steps, author sidebar.</div>
+    </div>
+  </div>
+
+  <div class="browser">
+    <div class="chrome">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="url">https://dishswapp.org/recipe/grandmas-sunday-ragu</div>
+    </div>
+    <div class="viewport" style="position:relative">
+      <div class="annot" style="top:8px;left:60px">1</div>
+      <div class="annot" style="top:50px;right:30px">2</div>
+      <div class="annot" style="top:200px;left:30px">3</div>
+      <div class="annot" style="top:200px;right:30px">4</div>
+      <div class="annot" style="bottom:30px;left:30px">5</div>
+
+      <div class="mock-nav">
+        <div class="brand">Dish<span class="accent">Swapp</span></div>
+        <div class="links"><span>Dashboard</span><span>About</span><span>Donate</span></div>
+        <div class="login">Login / Sign up</div>
+      </div>
+
+      <div style="background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%), #F9B7A4;height:170px;padding:0 22px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff">
+        <div style="font-family: var(--font-mono), sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.9;margin-bottom:4px">Italian · 45 min · Serves 6</div>
+        <div style="font-family: var(--font-serif), sans-serif;font-weight:700;font-size:30px;line-height:1.05;text-shadow:0 1px 4px rgba(0,0,0,0.3)">Grandma&rsquo;s Sunday rag&ugrave;</div>
+        <div style="font-size:10px;margin-top:4px;opacity:0.9">by Patrizio &middot; updated 3 days ago &middot; 142 cooks tried this</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:18px;padding:18px 22px">
+        <div>
+          <div style="font-family: var(--font-mono), sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#3D717C;font-weight:700;margin-bottom:8px">Ingredients</div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:10.5px;color:#2C2A28">
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">400 g</span> &nbsp; beef chuck</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">200 g</span> &nbsp; pork shoulder</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">1</span> &nbsp; onion, finely diced</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">2</span> &nbsp; carrots, finely diced</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">120 ml</span> &nbsp; whole milk</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">200 ml</span> &nbsp; dry white wine</span></div>
+            <div style="display:flex;justify-content:space-between;border-bottom:1px dashed #E5DDD0;padding-bottom:4px"><span><span style="font-family: var(--font-mono), sans-serif">400 g</span> &nbsp; canned tomatoes</span></div>
+          </div>
+          <div style="background:#EFE5D4;border-radius:8px;padding:10px 12px;margin-top:12px">
+            <div style="font-family: var(--font-mono), sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#E07A3B;font-weight:700;margin-bottom:4px">Tip</div>
+            <div style="font-size:10.5px;line-height:1.5;color:#2C2A28">The milk softens the meat. Don&rsquo;t skip it &mdash; it&rsquo;s the trick everyone asks about.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family: var(--font-mono), sans-serif;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#3D717C;font-weight:700;margin-bottom:8px">Method</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:10px;font-size:10.5px;line-height:1.5;color:#2C2A28"><div style="background:#3D717C;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family: var(--font-mono), sans-serif;font-size:10px;font-weight:700;flex-shrink:0">1</div><div>Sweat the soffritto in olive oil until translucent, about 7 minutes. Don&rsquo;t brown.</div></div>
+            <div style="display:flex;gap:10px;font-size:10.5px;line-height:1.5;color:#2C2A28"><div style="background:#3D717C;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family: var(--font-mono), sans-serif;font-size:10px;font-weight:700;flex-shrink:0">2</div><div>Add the diced meat and brown on all sides. Season with salt and a fine grate of nutmeg.</div></div>
+            <div style="display:flex;gap:10px;font-size:10.5px;line-height:1.5;color:#2C2A28"><div style="background:#3D717C;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family: var(--font-mono), sans-serif;font-size:10px;font-weight:700;flex-shrink:0">3</div><div>Pour in the milk and let it reduce until almost gone. This takes patience &mdash; 15 min.</div></div>
+            <div style="display:flex;gap:10px;font-size:10.5px;line-height:1.5;color:#2C2A28"><div style="background:#3D717C;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family: var(--font-mono), sans-serif;font-size:10px;font-weight:700;flex-shrink:0">4</div><div>Add the wine and reduce by half. Then the tomatoes, a pinch of sugar, and the lowest possible heat.</div></div>
+            <div style="display:flex;gap:10px;font-size:10.5px;line-height:1.5;color:#2C2A28"><div style="background:#3D717C;color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family: var(--font-mono), sans-serif;font-size:10px;font-weight:700;flex-shrink:0">5</div><div>Cook at a bare simmer for 3&ndash;4 hours. Stir occasionally. Toss with fresh tagliatelle.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#3D717C;color:#fff;padding:10px 22px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:10px">142 cooks tried this &middot; 12 comments &middot; 3 swaps</div>
+        <div style="display:flex;gap:8px">
+          <span style="background:rgba(255,255,255,0.15);padding:5px 12px;border-radius:999px;font-size:10px">Save</span>
+          <span style="background:#E07A3B;padding:5px 12px;border-radius:999px;font-size:10px;font-weight:600">Start cooking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annot-list">
+    <span class="num">1</span> Same nav as the homepage &mdash; consistency is the whole point of the system.
+    <span class="num">2</span> Hero image with title overlay &mdash; gradient scrim ensures WCAG-AA contrast on any photo.
+    <span class="num">3</span> Ingredients use tabular figures (<span class="kbd">tnum</span>) so quantities align in a column.
+    <span class="num">4</span> Method steps use the teal numeric badge &mdash; same component as the recipe-card meta.
+    <span class="num">5</span> Sticky bottom bar with one Spice CTA &mdash; the &ldquo;cook this&rdquo; moment, only here.
+  </div>
+</div>
+
+<!-- ==================== SECTION 18 — MOBILE MOCKUPS ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">18 &nbsp;·&nbsp; Mobile mockups</div>
+      <h2 class="section-title" style="margin-top:4px">390 × 844 &mdash; home and recipe, side-by-side</h2>
+      <div class="section-eyebrow">Bottom tab bar, condensed hero, scrollable cuisine pills, sticky cooking CTA.</div>
+    </div>
+  </div>
+
+  <div class="phones-row">
+    <div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="statusbar"><span>9:41</span><span>5G &nbsp; 100%</span></div>
+          <div class="app-nav">
+            <div class="brand">Dish<span class="accent">Swapp</span></div>
+            <div class="burger"></div>
+          </div>
+          <div class="app-body">
+            <div class="app-hero">
+              <div class="t">Collect, collaborate, <span class="ital">cook.</span></div>
+              <div class="cta">Start exploring</div>
+            </div>
+            <div class="pills-scroll">
+              <span class="pill-sm">All</span>
+              <span class="pill-sm t">Italian</span>
+              <span class="pill-sm">Mexican</span>
+              <span class="pill-sm t">Asian</span>
+              <span class="pill-sm">+12</span>
+            </div>
+            <div class="feed">
+              <div class="feed-card">
+                <div class="img"></div>
+                <div class="body"><div class="title">Grandma&rsquo;s Sunday rag&ugrave;</div><div class="meta">45 min · Italian · ★ 4.8</div></div>
+              </div>
+              <div class="feed-card">
+                <div class="img b"></div>
+                <div class="body"><div class="title">Tinga de pollo</div><div class="meta">50 min · Mexican · ★ 4.6</div></div>
+              </div>
+              <div class="feed-card">
+                <div class="img c"></div>
+                <div class="body"><div class="title">Maple glazed salmon</div><div class="meta">25 min · Asian · ★ 4.7</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab active"><div class="ic"></div>Home</div>
+            <div class="tab"><div class="ic"></div>Search</div>
+            <div class="tab"><div class="ic"></div>Cookbook</div>
+            <div class="tab"><div class="ic"></div>Profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">Homepage · 390 × 844</div>
+    </div>
+    <div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="statusbar"><span>9:41</span><span>5G &nbsp; 100%</span></div>
+          <div class="back-bar">
+            <span class="back">&larr;</span>
+            <span>Grandma&rsquo;s Sunday rag&ugrave;</span>
+            <span class="save">♥</span>
+          </div>
+          <div class="app-body" style="overflow-y:hidden">
+            <div class="rd-hero">
+              <div class="t">Grandma&rsquo;s Sunday rag&ugrave;</div>
+              <div class="m">Italian · 45 min · serves 6</div>
+            </div>
+            <div class="rd-section">
+              <div class="h">Ingredients · 7</div>
+              <div class="ing"><div style="display:flex;justify-content:space-between"><span>400 g beef chuck</span></div></div>
+              <div class="ing"><div style="display:flex;justify-content:space-between"><span>200 g pork shoulder</span></div></div>
+              <div class="ing"><div style="display:flex;justify-content:space-between"><span>120 ml whole milk</span></div></div>
+              <div class="ing" style="font-size:8.5px;color:#6B6661">+ 4 more &middot; tap to expand</div>
+            </div>
+            <div class="rd-section">
+              <div class="h">Method · 5 steps</div>
+              <div class="step"><div class="n">1</div><div>Sweat the soffritto in olive oil, 7 min.</div></div>
+              <div class="step"><div class="n">2</div><div>Brown the diced meat on all sides.</div></div>
+              <div class="step"><div class="n">3</div><div>Pour in the milk, reduce until gone.</div></div>
+            </div>
+          </div>
+          <div class="sticky-cta">Start cooking</div>
+        </div>
+      </div>
+      <div class="phone-caption">Recipe detail · 390 × 844</div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:12px">
+    <div class="h">Mobile-specific rules</div>
+    Hero shrinks from 16:9 to a 100-pt fixed height; the cuisine row becomes a horizontally-scrollable pill rail; the sticky bottom bar replaces the desktop sidebar. The Spice CTA is always the only spice-colored element on screen at any moment.
+  </div>
+</div>
+
+<!-- ==================== SECTION 19 — BOOTSTRAP TOKEN MAP & ASTRO ==================== -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-num">19 &nbsp;·&nbsp; Bootstrap token map &amp; Astro implementation</div>
+      <h2 class="section-title" style="margin-top:4px">Ready to paste</h2>
+      <div class="section-eyebrow">CSS variables, Bootstrap SCSS overrides, suggested Astro folder structure.</div>
+    </div>
+  </div>
+
+  <div class="label" style="margin-bottom:6px">1 · CSS custom properties (paste into <span class="kbd">src/styles/tokens.css</span>)</div>
+  <div class="code"><span class="kw">:root</span> {
+  <span class="cm">/* Brand &mdash; warm home-cook palette (refined from current site) */</span>
+  <span class="va">--ds-teal</span>:        <span class="st">#3D717C</span>;
+  <span class="va">--ds-teal-dark</span>:   <span class="st">#2A535C</span>;
+  <span class="va">--ds-teal-light</span>:  <span class="st">#5A8E97</span>;
+  <span class="va">--ds-teal-tint</span>:   <span class="st">#E5EDEF</span>;
+  <span class="va">--ds-pink</span>:        <span class="st">#F9B7A4</span>;
+  <span class="va">--ds-pink-soft</span>:   <span class="st">#FCE6DD</span>;
+  <span class="va">--ds-spice</span>:       <span class="st">#E07A3B</span>;
+  <span class="va">--ds-spice-soft</span>:  <span class="st">#F6E0CB</span>;
+  <span class="va">--ds-cream</span>:       <span class="st">#FBF7F1</span>;
+  <span class="va">--ds-oat</span>:         <span class="st">#EFE5D4</span>;
+  <span class="va">--ds-ink</span>:         <span class="st">#2C2A28</span>;
+  <span class="va">--ds-muted</span>:       <span class="st">#6B6661</span>;
+  <span class="va">--ds-border</span>:      <span class="st">#E5DDD0</span>;
+
+  <span class="cm">/* Semantic */</span>
+  <span class="va">--ds-success</span>:     <span class="st">#6B7A3A</span>;
+  <span class="va">--ds-warning</span>:     <span class="st">#E07A3B</span>;
+  <span class="va">--ds-danger</span>:      <span class="st">#C75D3B</span>;
+  <span class="va">--ds-info</span>:        <span class="st">#3D717C</span>;
+
+  <span class="cm">/* Type */</span>
+  <span class="va">--ds-font-serif</span>:  <span class="st">'Playfair Display'</span>, Georgia, serif;
+  <span class="va">--ds-font-sans</span>:   <span class="st">'Inter'</span>, system-ui, sans-serif;
+  <span class="va">--ds-font-mono</span>:   <span class="st">'JetBrains Mono'</span>, ui-monospace, monospace;
+
+  <span class="cm">/* Radius + shadow */</span>
+  <span class="va">--ds-r-sm</span>: 4px;
+  <span class="va">--ds-r-md</span>: 10px;
+  <span class="va">--ds-r-lg</span>: 18px;
+  <span class="va">--ds-r-pill</span>: 999px;
+  <span class="va">--ds-shadow-sm</span>: 0 1px 2px rgba(44,42,40,0.06);
+  <span class="va">--ds-shadow-md</span>: 0 4px 12px rgba(44,42,40,0.08);
+  <span class="va">--ds-shadow-lg</span>: 0 12px 32px rgba(44,42,40,0.12);
+}</div>
+
+  <div class="label" style="margin-top:10px;margin-bottom:6px">2 · Bootstrap 5.3 SCSS overrides (paste into <span class="kbd">src/styles/_dishswapp.scss</span>, before <span class="kbd">@import 'bootstrap/scss/bootstrap'</span>)</div>
+  <div class="code"><span class="va">$primary</span>:   <span class="st">#3D717C</span>;
+<span class="va">$secondary</span>: <span class="st">#EFE5D4</span>;
+<span class="va">$accent</span>:    <span class="st">#F9B7A4</span>;
+<span class="va">$emphasis</span>:  <span class="st">#E07A3B</span>;
+<span class="va">$success</span>:   <span class="st">#6B7A3A</span>;
+<span class="va">$danger</span>:    <span class="st">#C75D3B</span>;
+
+<span class="va">$body-bg</span>:        <span class="st">#FBF7F1</span>;
+<span class="va">$body-color</span>:     <span class="st">#2C2A28</span>;
+<span class="va">$text-muted</span>:     <span class="st">#6B6661</span>;
+<span class="va">$border-color</span>:   <span class="st">#E5DDD0</span>;
+<span class="va">$border-radius</span>:        <span class="st">10px</span>;
+<span class="va">$border-radius-sm</span>:     <span class="st">4px</span>;
+<span class="va">$border-radius-lg</span>:     <span class="st">18px</span>;
+<span class="va">$component-active-bg</span>: <span class="st">#3D717C</span>;
+
+<span class="va">$font-family-sans-serif</span>:  <span class="st">'Inter'</span>, system-ui, sans-serif;
+<span class="va">$font-family-serif</span>:      <span class="st">'Playfair Display'</span>, Georgia, serif;
+<span class="va">$font-family-monospace</span>:  <span class="st">'JetBrains Mono'</span>, monospace;
+<span class="va">$headings-font-family</span>:   <span class="va">$font-family-serif</span>;
+<span class="va">$headings-font-weight</span>:   <span class="st">700</span>;
+<span class="va">$headings-color</span>:        <span class="st">#2C2A28</span>;
+
+<span class="va">$btn-font-weight</span>:    <span class="st">600</span>;
+<span class="va">$btn-padding-y</span>:     <span class="st">10px</span>;
+<span class="va">$btn-padding-x</span>:     <span class="st">22px</span>;
+<span class="va">$btn-border-radius</span>: <span class="st">10px</span>;
+
+<span class="va">$card-border-color</span>: <span class="st">#E5DDD0</span>;
+<span class="va">$card-border-radius</span>: <span class="st">12px</span>;
+<span class="va">$card-cap-bg</span>:        <span class="st">#EFE5D4</span>;</div>
+
+  <div class="two-col">
+    <div>
+      <div class="label" style="margin-bottom:6px">3 · Suggested Astro project structure</div>
+      <div class="code" style="font-size:10px">src/
+&lfloor; styles/
+&tree;   &lfloor; tokens.css     <span class="cm"># CSS variables above</span>
+&tree;   &lfloor; _dishswapp.scss <span class="cm"># Bootstrap overrides above</span>
+&tree;   &lfloor; global.css     <span class="cm"># @import tokens + bootstrap</span>
+&tree; layouts/
+&tree;   &lfloor; BaseLayout.astro
+&tree;   &lfloor; RecipeLayout.astro
+&tree; components/
+&tree;   &lfloor; Nav.astro
+&tree;   &lfloor; Footer.astro
+&tree;   &lfloor; RecipeCard.astro
+&tree;   &lfloor; CuisineRow.astro
+&tree;   &lfloor; StickyCTA.astro
+&tree;   &lfloor; Button.astro
+&tree; pages/
+&tree;   &lfloor; index.astro         <span class="cm"># homepage</span>
+&tree;   &lfloor; recipe/[slug].astro  <span class="cm"># recipe detail</span>
+&tree;   &lfloor; cuisine/[cuisine].astro
+&tree;   &lfloor; cookbook.astro
+&tree;   &lfloor; about.astro
+&tree;   &lfloor; donate.astro</div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:6px">4 · Dark-mode token swap</div>
+      <div class="code" style="font-size:10.5px"><span class="kw">@media</span> (prefers-color-scheme: dark) {
+  <span class="kw">:root</span> {
+    <span class="va">--ds-cream</span>:   <span class="st">#1F1D1B</span>;
+    <span class="va">--ds-oat</span>:     <span class="st">#2C2A28</span>;
+    <span class="va">--ds-ink</span>:     <span class="st">#F5EFE3</span>;
+    <span class="va">--ds-muted</span>:   <span class="st">#B5AE9F</span>;
+    <span class="va">--ds-border</span>:  <span class="st">#3A3733</span>;
+    <span class="va">--ds-teal-tint</span>: <span class="st">#2A3A3F</span>;
+  }
+}
+<span class="cm">// Teal, pink, spice stay the same &mdash; the brand colors are </span>
+<span class="cm">// fixed; only the neutrals invert in dark mode.</span></div>
+      <div class="callout" style="margin-top:10px">
+        <div class="h">Implementation order</div>
+        1. Wire tokens &amp; fonts &rarr; 2. Build <span class="kbd">Button.astro</span> &amp; <span class="kbd">RecipeCard.astro</span> first &rarr; 3. Build <span class="kbd">Nav.astro</span> + <span class="kbd">BaseLayout.astro</span> &rarr; 4. Rebuild the homepage from the section-16 mockup &rarr; 5. Rebuild the recipe page from section-17 &rarr; 6. Port the remaining pages.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main-content -->
+
+<!-- =========================================================
+     ENDING PAGE
+     ========================================================= -->
+<div class="ending">
+  <div class="content">
+    <div class="tag">End of the brand book</div>
+    <div class="big">Cook together.</div>
+    <div class="sub">Take this book, wire the tokens, build the components, and ship the makeover. The brand is already in the codebase &mdash; this is just the version that scales.</div>
+  </div>
+  <div class="meta">
+    <span>DishSwapp Brand Book v2.0</span>
+    <span>Nov 2026 &middot; Astro + Bootstrap Edition</span>
+  </div>
+</div>
+
+</body>
+</html>
