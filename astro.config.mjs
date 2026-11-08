@@ -1,6 +1,4 @@
-// astro.config.mjs
 import { defineConfig } from "astro/config";
-import node from "@astrojs/node";               // ← NEW
 import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel/serverless";   // ← add
 import tina from "@tinacms/astro/integration";
@@ -12,20 +10,11 @@ const SITE_URL        = process.env.SITE_URL ?? "https://dishswapp.org";
 
 export default defineConfig({
   site: SITE_URL,
-  output: "server",            // ← add (required for Clerk components)
-  adapter: vercel(), 
+  output: "server",          // ← add
+  adapter: vercel(),         // ← add
   trailingSlash: "ignore",
-
-
-
   integrations: [
-    clerk({                                      // ← FIXED: one clerk() call, with options
-      publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-      secretKey: process.env.CLERK_SECRET_KEY,   // ← add
-    }),
-
     mdx({ gfm: true }),
-
     tina({
       tinaDir: ".tina",
       client: true,
@@ -34,19 +23,15 @@ export default defineConfig({
         ...(TINA_API ? { baseUrl: TINA_API } : {}),
       },
     }),
+    clerk({
+      publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+      secretKey: process.env.CLERK_SECRET_KEY,   // ← add
+    }),
   ],
-
   image: {},
-
   vite: {
-    css: {
-      preprocessorOptions: { scss: {} },
-    },
-    optimizeDeps: {
-      include: ["tinacms", "color-string"],
-    },
-    ssr: {
-      noExternal: ["tinacms", "color-string"],
-    },
+    css: { preprocessorOptions: { scss: {} } },
+    optimizeDeps: { include: ["tinacms", "color-string"] },
+    ssr: { noExternal: ["tinacms", "color-string"] },
   },
 });
