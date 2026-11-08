@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
-import vercel from "@astrojs/vercel/serverless";   // ← add
+import vercel from "@astrojs/vercel";               // ✅ Astro 7 syntax
 import tina from "@tinacms/astro/integration";
 import clerk from "@clerk/astro";
 
