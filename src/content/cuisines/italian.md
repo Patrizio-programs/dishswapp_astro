@@ -1,8 +1,5 @@
----
-slug: italian
 name: Italian
 region: Europe
-emojiGlyph: ""
-blurb: ""
-signatureDishes: []
---- 
+blurb: Sunday ragù, cacio e pepe, the whole peninsula.
+signatureDishes:
+  - grandmas-sunday-ragu
