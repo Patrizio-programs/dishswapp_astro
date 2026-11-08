@@ -182,18 +182,18 @@ export default defineSchema({
     // ────────────────────────────────────────────────────────────
     // COLLECTION (curated recipe groupings)
     // ────────────────────────────────────────────────────────────
-    {
-      name: "collection", label: "Collections", path: "src/content/collections", format: "md",
-      fields: [
-        { name: "title", type: "string", required: true },
-        { name: "description", type: "string", required: true, ui: { component: "textarea" } },
-        { name: "curator", type: "reference", required: true, collections: ["author"] },
-        { name: "recipes", type: "reference", required: true, list: true, collections: ["recipe"] },
-        { name: "coverImage", type: "reference", required: true, collections: ["mediaAsset"] },
-        { name: "isFeatured", type: "boolean", required: false, ui: { defaultValue: false } },
-        { name: "publishedAt", type: "datetime", required: true },
-      ],
-    },
+   {
+  name: "curation", label: "Curations", path: "src/content/collections", format: "md",
+  fields: [
+    { name: "title", type: "string", required: true },
+    { name: "description", type: "string", required: true, ui: { component: "textarea" } },
+    { name: "curator", type: "reference", required: true, collections: ["author"] },
+    { name: "recipes", type: "reference", required: true, list: true, collections: ["recipe"] },
+    { name: "coverImage", type: "reference", required: true, collections: ["mediaAsset"] },
+    { name: "isFeatured", type: "boolean", required: false, ui: { defaultValue: false } },
+    { name: "publishedAt", type: "datetime", required: true },
+  ],
+},
     // ────────────────────────────────────────────────────────────
     // MEDIA ASSET
     // ────────────────────────────────────────────────────────────
