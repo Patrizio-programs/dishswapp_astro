@@ -1,7 +1,8 @@
 // src/content/config.ts
 // Astro content collections — mirrors .tina/schema.ts
-
+import { glob } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
+
 
 // ─── Helpers ──────────────────────────────────────────────────
 const slug = z.string().regex(/^[a-z0-9-]+$/, "Lowercase kebab-case only.");
@@ -60,10 +61,10 @@ const recipes = defineCollection({
     description: z.string().max(280),
     author: reference("author"),
     cuisines: z.array(reference("cuisine")).min(1),
-    mealTypes: z.array(reference("mealType")).default([]),
-    diets: z.array(reference("diet")).default([]),
-    difficulty: reference("difficulty"),
-    season: z.array(reference("season")).default([]),
+    mealTypes: z.array(z.enum(["breakfast","lunch","dinner","snack","dessert","drink"])).default([]),
+diets: z.array(z.enum(["vegan","vegetarian","gluten-free","keto","halal","kosher","paleo","low-FODMAP"])).default([]),
+difficulty: z.enum(["easy","intermediate","advanced"]),
+season: z.array(z.enum(["spring","summer","fall","winter","holiday"])).default([]),
     tags: z.array(reference("tag")).default([]),
     prepTimeMinutes: z.number().int().min(0),
     cookTimeMinutes: z.number().int().min(0),
