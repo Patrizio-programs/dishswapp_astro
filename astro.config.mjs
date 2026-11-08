@@ -2,6 +2,7 @@
 import { defineConfig } from "astro/config";
 import node from "@astrojs/node";               // ← NEW
 import mdx from "@astrojs/mdx";
+import vercel from "@astrojs/vercel/serverless";   // ← add
 import tina from "@tinacms/astro/integration";
 import clerk from "@clerk/astro";
 
@@ -11,14 +12,16 @@ const SITE_URL        = process.env.SITE_URL ?? "https://dishswapp.org";
 
 export default defineConfig({
   site: SITE_URL,
+  output: "server",            // ← add (required for Clerk components)
+  adapter: vercel(), 
   trailingSlash: "ignore",
 
-  output: "server",                             // ← NEW: SSR mode
-  adapter: node({ mode: "standalone" }),        // ← NEW: Node adapter
+
 
   integrations: [
     clerk({                                      // ← FIXED: one clerk() call, with options
       publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+      secretKey: process.env.CLERK_SECRET_KEY,   // ← add
     }),
 
     mdx({ gfm: true }),
