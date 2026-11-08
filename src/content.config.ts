@@ -148,7 +148,7 @@ const tags = defineCollection({
 });
 
 // ─── Collection (curated recipe groupings) ────────────────────
-const collections = defineCollection({
+const curatedCollections = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/collections" }),
   schema: z.object({
     title: z.string(),
@@ -205,6 +205,6 @@ const site = defineCollection({
 });
 
 export const collections = {
-  recipes, authors, cuisines, tags, collections,
+  recipes, authors, cuisines, tags, curatedCollections,
   mediaAssets, site,
 };

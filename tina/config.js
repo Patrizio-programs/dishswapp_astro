@@ -1,7 +1,7 @@
 import { defineConfig } from 'tinacms';
 
 // Your hosting provider likely exposes this as an environment variable
-//TINA API https://content.tinajs.io/3.0/content/00d8547e-0659-4442-913d-16077b8cf202/github/main
+//TINA API https://content.tinajs.io/3.0/content/00d8547e-0659-4442-913d-16077b8cf2
 const branch =
   process.env.GITHUB_BRANCH ||
   process.env.VERCEL_GIT_COMMIT_REF ||

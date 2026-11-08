@@ -176,3 +176,4 @@ same license as the DishSwapp project (currently MIT for code) for use in the
 project itself and its derivatives. If you fork the project for a different
 recipe site, please replace the wordmark and symbol with your own — don't
 ship a fork using the DishSwapp mark.
+ 

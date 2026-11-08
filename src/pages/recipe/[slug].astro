@@ -1,0 +1,24 @@
+---
+// https://content.tinajs.io/3.0/content/00d8547e-0659-4442-913d-16077b8cf202/github/main
+
+import { getCollection } from "astro:content";
+import Layout from "../../layout/Layout.astro";
+import RecipeDetail from "../../components/Recipe-detail.astro";
+export const prerender = true;
+export async function getStaticPaths() {
+  const recipes = await getCollection("recipes", ({ data }) =>
+    !data.isDraft && data.isPublic
+  );
+  return recipes.map((r) => ({
+    params: { slug: r.id },
+    props: { recipe: r },
+  }));
+}
+const { recipe } = Astro.props;
+const { Content } = await recipe.render();
+---
+<Layout title={recipe.data.title} description={recipe.data.description}>
+  <RecipeDetail recipe={recipe}>
+    <Content />
+  </RecipeDetail>
+</Layout>
