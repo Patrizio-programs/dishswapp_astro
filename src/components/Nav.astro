@@ -1,5 +1,6 @@
 ---
 // Astro frontmatter
+import { Show, UserButton} from "@clerk/astro/components"
 ---
 
 <nav class="navbar navbar-expand-lg custom-navbar py-3">
@@ -39,9 +40,14 @@
 
       <!-- Right Action Button -->
       <div class="d-flex justify-content-center pt-2 pt-lg-0">
-        <a href="#login" class="btn btn-auth rounded-pill px-4 py-2 fw-semibold">
+         <Show when="signed-out"> 
+        <a href="/login" class="btn btn-auth rounded-pill px-4 py-2 fw-semibold">
           Login / Sign up
         </a>
+        </Show>
+        <Show when="signed-in">
+        <UserButton />
+      </Show>
       </div>
     </div>
   </div>
