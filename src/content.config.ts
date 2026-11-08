@@ -1,8 +1,8 @@
 // src/content/config.ts
-// Astro content collections — mirrors .tina/schema.ts
+// Astro content collections — mirrors tina/schema.ts
+// Uses Astro 7 Content Layer API (glob loaders instead of type:)
 import { glob } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
-
 
 // ─── Helpers ──────────────────────────────────────────────────
 const slug = z.string().regex(/^[a-z0-9-]+$/, "Lowercase kebab-case only.");
@@ -53,18 +53,18 @@ const SEO = z.object({
   structuredData: z.string().optional(),
 });
 
-// ─── Recipe ───────────────────────────────────────────────────
+// ─── Recipe (MDX) ─────────────────────────────────────────────
 const recipes = defineCollection({
-  type: "content",             // MDX
+  loader: glob({ pattern: "**/*.mdx", base: "./src/content/recipes" }),
   schema: z.object({
     title: z.string().max(80),
     description: z.string().max(280),
     author: reference("author"),
     cuisines: z.array(reference("cuisine")).min(1),
     mealTypes: z.array(z.enum(["breakfast","lunch","dinner","snack","dessert","drink"])).default([]),
-diets: z.array(z.enum(["vegan","vegetarian","gluten-free","keto","halal","kosher","paleo","low-FODMAP"])).default([]),
-difficulty: z.enum(["easy","intermediate","advanced"]),
-season: z.array(z.enum(["spring","summer","fall","winter","holiday"])).default([]),
+    diets: z.array(z.enum(["vegan","vegetarian","gluten-free","keto","halal","kosher","paleo","low-FODMAP"])).default([]),
+    difficulty: z.enum(["easy","intermediate","advanced"]),
+    season: z.array(z.enum(["spring","summer","fall","winter","holiday"])).default([]),
     tags: z.array(reference("tag")).default([]),
     prepTimeMinutes: z.number().int().min(0),
     cookTimeMinutes: z.number().int().min(0),
@@ -95,7 +95,7 @@ season: z.array(z.enum(["spring","summer","fall","winter","holiday"])).default([
 
 // ─── Author ───────────────────────────────────────────────────
 const authors = defineCollection({
-  type: "data",                // .md frontmatter, no body
+  loader: glob({ pattern: "**/*.md", base: "./src/content/authors" }),
   schema: z.object({
     handle: slug,
     displayName: z.string(),
@@ -118,12 +118,14 @@ const authors = defineCollection({
 
 // ─── Cuisine ──────────────────────────────────────────────────
 const cuisines = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/cuisines" }),
   schema: z.object({
     name: z.string(),
-    region: z.enum(["Americas","Europe","Mediterranean & Middle East",
-                    "Sub-Saharan Africa","South & Southeast Asia",
-                    "East Asia","Oceania"]),
+    region: z.enum([
+      "Americas", "Europe", "Mediterranean & Middle East",
+      "Sub-Saharan Africa", "South & Southeast Asia",
+      "East Asia", "Oceania"
+    ]),
     blurb: z.string().max(80),
     signatureDishes: z.array(z.string()).default([]),
   }),
@@ -131,11 +133,13 @@ const cuisines = defineCollection({
 
 // ─── Tag ──────────────────────────────────────────────────────
 const tags = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/tags" }),
   schema: z.object({
     name: z.string(),
-    category: z.enum(["technique","equipment","occasion",
-                      "ingredient-feature","time-of-day","adjective"]),
+    category: z.enum([
+      "technique", "equipment", "occasion",
+      "ingredient-feature", "time-of-day", "adjective"
+    ]),
     description: z.string().optional(),
     usageCount: z.number().int().default(0),
     isCurated: z.boolean().default(false),
@@ -143,9 +147,9 @@ const tags = defineCollection({
   }),
 });
 
-// ─── Collection ───────────────────────────────────────────────
+// ─── Collection (curated recipe groupings) ────────────────────
 const collections = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/collections" }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -159,7 +163,7 @@ const collections = defineCollection({
 
 // ─── MediaAsset ───────────────────────────────────────────────
 const mediaAssets = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/media" }),
   schema: z.object({
     alt: z.string(),
     src: z.string(),
@@ -180,7 +184,7 @@ const mediaAssets = defineCollection({
 
 // ─── Site Config (singleton) ──────────────────────────────────
 const site = defineCollection({
-  type: "data",
+  loader: glob({ pattern: "**/*.md", base: "./src/content/site" }),
   schema: z.object({
     siteTitle: z.string(),
     tagline: z.string(),

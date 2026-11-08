@@ -1,6 +1,8 @@
+// astro.config.mjs
 import { defineConfig } from "astro/config";
+import node from "@astrojs/node";               // ← NEW
 import mdx from "@astrojs/mdx";
-import tina from "@tinacms/astro/integration";   // ← changed
+import tina from "@tinacms/astro/integration";
 import clerk from "@clerk/astro";
 
 const TINA_CLIENT_ID = process.env.TINA_CLIENT_ID;
@@ -11,20 +13,23 @@ export default defineConfig({
   site: SITE_URL,
   trailingSlash: "ignore",
 
+  output: "server",                             // ← NEW: SSR mode
+  adapter: node({ mode: "standalone" }),        // ← NEW: Node adapter
+
   integrations: [
+    clerk({                                      // ← FIXED: one clerk() call, with options
+      publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+    }),
+
     mdx({ gfm: true }),
 
-    tina({                                       // ← changed
+    tina({
       tinaDir: ".tina",
       client: true,
       admin: {
         clientId: TINA_CLIENT_ID,
         ...(TINA_API ? { baseUrl: TINA_API } : {}),
       },
-    }),
-
-    clerk({
-      publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
     }),
   ],
 
