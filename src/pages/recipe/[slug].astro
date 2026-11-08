@@ -2,6 +2,9 @@
 import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../../layout/Layout.astro";
 import RecipeDetail from "../../components/Recipe-detail.astro";
+import Nav from "../../components/Nav.astro";
+import Footer from "../../components/Footer.astro"; 
+
 
 export const prerender = true;
 
@@ -26,6 +29,7 @@ const coverImage = await getEntry(recipe.data.coverImage);
 const heroImage = recipe.data.heroImage ? await getEntry(recipe.data.heroImage) : undefined;
 ---
 <Layout title={recipe.data.title} description={recipe.data.description}>
+  <Nav></Nav>
   <RecipeDetail
     recipe={recipe}
     author={author}
@@ -35,4 +39,6 @@ const heroImage = recipe.data.heroImage ? await getEntry(recipe.data.heroImage) 
   >
     <Content />
   </RecipeDetail>
+
+    <Footer></Footer>
 </Layout>
