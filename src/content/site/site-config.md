@@ -1,3 +1,4 @@
+---
 siteTitle: DishSwapp
 tagline: Collect, Collaborate, Cook.
 defaultOgImage: grandmas-ragu-cover
@@ -10,3 +11,4 @@ footerLinks:
 socialLinks:
   github: https://github.com/dishswapp/dishswapp_astro
 recipeOfTheMonth: grandmas-sunday-ragu
+---
