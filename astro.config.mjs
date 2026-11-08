@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
-import vercel from "@astrojs/vercel";               // ✅ Astro 7 syntax
+import vercel from "@astrojs/vercel";   // if you've added it
 import tina from "@tinacms/astro/integration";
 import clerk from "@clerk/astro";
 
@@ -10,8 +10,8 @@ const SITE_URL        = process.env.SITE_URL ?? "https://dishswapp.org";
 
 export default defineConfig({
   site: SITE_URL,
-  output: "server",          // ← add
-  adapter: vercel(),         // ← add
+  output: "server",          // ← required for POST routes
+  adapter: vercel(),         // ← only if you've installed @astrojs/vercel
   trailingSlash: "ignore",
   integrations: [
     mdx({ gfm: true }),
@@ -25,13 +25,22 @@ export default defineConfig({
     }),
     clerk({
       publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
-      secretKey: process.env.CLERK_SECRET_KEY,   // ← add
+      secretKey: process.env.CLERK_SECRET_KEY,
     }),
   ],
   image: {},
   vite: {
     css: { preprocessorOptions: { scss: {} } },
-    optimizeDeps: { include: ["tinacms", "color-string"] },
-    ssr: { noExternal: ["tinacms", "color-string"] },
+    optimizeDeps: {
+      include: ["tinacms", "color-string"],
+      esbuildOptions: {
+        // ← NEW: stop esbuild from trying to bundle node built-ins
+        // inside cosmiconfig (which @tinacms/app imports)
+        external: ["fs", "fs/promises", "path", "os", "crypto"],
+      },
+    },
+    ssr: {
+      noExternal: ["tinacms", "color-string"],
+    },
   },
 });

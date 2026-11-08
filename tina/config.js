@@ -1,7 +1,21 @@
+// tina/config.js
+// -----------------------------------------------------------------------------
+// TinaCMS configuration for DishSwapp.
+//
+// Loads the full brand-book schema from ./schema (tina/schema.ts), which
+// defines seven collections: recipe, author, cuisine, tag, collection,
+// mediaAsset, site.
+//
+// The previous demo `post` collection has been removed. If you still need it
+// (e.g. for the /tinacms-demo page), see "Cleanup notes" at the bottom.
+// -----------------------------------------------------------------------------
 import { defineConfig } from 'tinacms';
+import schema from './schema';
 
-// Your hosting provider likely exposes this as an environment variable
-//TINA API https://content.tinajs.io/3.0/content/00d8547e-0659-4442-913d-16077b8cf2
+// Branch resolution — Tina writes MDX files to a git branch.
+// On Vercel: VERCEL_GIT_COMMIT_REF is set automatically.
+// On Netlify: HEAD is set automatically.
+// Locally: falls back to 'main'.
 const branch =
   process.env.GITHUB_BRANCH ||
   process.env.VERCEL_GIT_COMMIT_REF ||
@@ -10,76 +24,33 @@ const branch =
 
 export default defineConfig({
   branch,
-  // Get this from tina.io
+
+  // TinaCloud credentials — set both as env vars in Vercel + .env locally.
   clientId: process.env.TINA_CLIENT_ID,
-  // Get this from tina.io
   token: process.env.TINA_TOKEN,
+
   build: {
-    outputFolder: 'admin',
-    publicFolder: 'public',
+    outputFolder: 'admin',   // Tina admin UI is served at /admin
+    publicFolder: 'public',  // where static assets live
   },
-  // Uncomment to allow cross-origin requests from non-localhost origins
-  // during local development (e.g. GitHub Codespaces, Gitpod, Docker).
-  // Use 'private' to allow all private-network IPs (WSL2, Docker, etc.)
-  // server: {
-  //   allowedOrigins: ['https://your-codespace.github.dev'],
-  // },
+
+  // Media manager — Tina handles image uploads to the public/ folder.
   media: {
     tina: {
-      mediaRoot: '',
+      mediaRoot: 'images',       // uploads land in public/images/
       publicFolder: 'public',
     },
   },
-  // See docs on content modeling for more info on how to setup new content models: https://tina.io/docs/r/content-modelling-collections/
-  schema: {
-    collections: [
-      {
-        name: 'post',
-        label: 'Posts',
-        path: 'content/posts',
-        fields: [
-          {
-            type: 'string',
-            name: 'eyebrow',
-            label: 'Eyebrow',
-          },
-          {
-            type: 'string',
-            name: 'title',
-            label: 'Headline',
-            isTitle: true,
-            required: true,
-          },
-          {
-            type: 'rich-text',
-            name: 'body',
-            label: 'Tagline',
-            isBody: true,
-          },
-          {
-            type: 'object',
-            name: 'ctaPrimary',
-            label: 'Primary button',
-            fields: [
-              { type: 'string', name: 'label', label: 'Label' },
-              { type: 'string', name: 'href', label: 'Link' },
-            ],
-          },
-          {
-            type: 'object',
-            name: 'ctaSecondary',
-            label: 'Secondary button',
-            fields: [
-              { type: 'string', name: 'label', label: 'Label' },
-              { type: 'string', name: 'href', label: 'Link' },
-            ],
-          },
-        ],
-        ui: {
-          // Opens the /tinacms-demo page for visual editing. Change or remove to fit your site.
-          router: () => '/tinacms-demo',
-        },
-      },
-    ],
-  },
+
+  // The full schema — recipe, author, cuisine, tag, collection, mediaAsset, site.
+  // See ./schema.ts for field definitions. Recipe files are written to:
+  //   src/content/recipes/<slug>.mdx
+  schema,
+
+  // Optional: limit who can edit in production. Default is open in dev,
+  // locked to logged-in TinaCloud users in prod. Leave as-is unless you
+  // self-host the Tina backend.
+  // admin: {
+  //   auth: 'local',  // or a custom auth provider
+  // },
 });

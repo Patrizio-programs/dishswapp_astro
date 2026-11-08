@@ -1,8 +1,7 @@
 // .tina/schema.ts
 // DishSwapp — content model schema
 // Edition One · Nov 2026
-import { defineSchema } from "@tinacms/cli";
-import type { TinaSchema } from "@tinacms/cli/dist/types";
+import { defineSchema } from "tinacms";
 
 export default defineSchema({
   collections: [
@@ -253,4 +252,4 @@ export default defineSchema({
       ],
     },
   ],
-}) as TinaSchema;
+}) 
