@@ -1,0 +1,611 @@
+---
+/**
+ * Dashboard.astro
+ * -----------------------------------------------------------------------------
+ * DishSwapp — logged-in user dashboard.
+ *
+ * Renders one of two states based on whether the user has recipes:
+ *   • Empty   → big Spice "Add a recipe" CTA + outline "Browse the feed".
+ *   • Filled  → toolbar ("Your recipes" + same two actions as primary teal +
+ *               outline) and a three-up recipe grid using the RecipeCard
+ *               anatomy from Brand Book §11.
+ *
+ * Designed per DishSwapp Brand Book v2.0 (Nov 2026, Astro + Bootstrap edition).
+ * Self-contained: ships its own tokens (Brand Book §19.1) but defers to a
+ * global tokens.css if one is present (the :root block is guarded).
+ *
+ * Usage
+ *   ---
+ *   import Dashboard from '../components/Dashboard.astro';
+ *   const recipes = await getUserRecipes(user.id);
+ *   ---
+ *   <Dashboard user={{ name: 'Patrizio' }} recipes={recipes} />
+ *
+ * Props
+ *   user           { name: string }              — logged-in cook's full name
+ *   recipes        DashboardRecipe[] (default []) — pass [] for the empty state
+ *   feedHref       string  (default '/feed')
+ *   addRecipeHref  string  (default '/recipes/new')
+ * -----------------------------------------------------------------------------
+ */
+
+export interface DashboardRecipe {
+  slug: string;
+  title: string;
+  excerpt: string;
+  cover: { src: string; alt: string };
+  cuisine: string;        // "Italian", "Mexican", …
+  cookTime: string;       // "45 min"
+  servings: number;
+  rating?: number;        // 0–5, omit if unrated
+  cooksTried: number;
+  comments: number;
+  swaps: number;
+  updatedAt: string;      // ISO 8601
+  status?: 'published' | 'draft';
+}
+
+export interface DashboardUser {
+  name: string;
+}
+
+export interface Props {
+  user: DashboardUser;
+  recipes?: DashboardRecipe[];
+  feedHref?: string;
+  addRecipeHref?: string;
+}
+
+const {
+  user,
+  recipes = [],
+  feedHref = '/feed',
+  addRecipeHref = '/recipes/new',
+} = Astro.props;
+
+const hasRecipes = recipes.length > 0;
+const firstName = user.name.split(' ')[0];
+const recipeWord = recipes.length === 1 ? 'recipe' : 'recipes';
+---
+
+<section class="ds-dashboard" aria-labelledby="ds-dashboard-title">
+  <div class="ds-dashboard__container">
+
+    {/* ─── Header ─────────────────────────────────────────────────────── */}
+    <header class="ds-dashboard__header">
+      <p class="ds-eyebrow">Your kitchen</p>
+      <h1 id="ds-dashboard-title" class="ds-dashboard__title">
+        Welcome back, {firstName}.
+      </h1>
+      <p class="ds-dashboard__lead">
+        {hasRecipes
+          ? `You've got ${recipes.length} ${recipeWord} in your cookbook. Add another, or browse what the community is cooking.`
+          : `No saved recipes yet — your cookbook is hungry. Add your first recipe, or browse what the community is cooking.`}
+      </p>
+    </header>
+
+    {/* ─── Empty state ────────────────────────────────────────────────── */}
+    {!hasRecipes && (
+      <div class="ds-empty">
+        <div class="ds-empty__card">
+          <div class="ds-empty__art" aria-hidden="true">
+            {/* Chef hat — line icon, 1.5px stroke, rounded caps (Brand Book §12) */}
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 40 V50 C16 51.1 16.9 52 18 52 H46 C47.1 52 48 51.1 48 50 V40" />
+              <path d="M48 40 C56 40 60 32 56 26 C58 18 52 12 46 14 C44 8 36 6 32 12 C28 6 20 8 18 14 C12 12 6 18 8 26 C4 32 8 40 16 40 Z" />
+              <path d="M22 46 V52 M32 46 V52 M42 46 V52" />
+            </svg>
+          </div>
+
+          <h2 class="ds-empty__title">Cook something good together.</h2>
+          <p class="ds-empty__text">
+            Your cookbook is empty. Add a recipe of your own — your grandma's
+            ragù, last Tuesday's stir-fry, anything — or browse the feed to see
+            what other home cooks are sharing.
+          </p>
+
+          <div class="ds-empty__actions">
+            <a class="btn btn-spice btn-lg" href={addRecipeHref}>
+              <svg class="ds-btn__icon" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Add a recipe
+            </a>
+            <a class="btn btn-outline-primary btn-lg" href={feedHref}>
+              Browse the feed
+            </a>
+          </div>
+
+          <p class="ds-empty__hint">
+            <span class="ds-mono">Tip</span>
+            · Every recipe on DishSwapp is a starting point. Forks, comments and
+            step-by-step photos are first-class — you can always improve it later.
+          </p>
+        </div>
+      </div>
+    )}
+
+    {/* ─── Populated state ────────────────────────────────────────────── */}
+    {hasRecipes && (
+      <div class="ds-dashboard__body">
+        <div class="ds-dashboard__toolbar">
+          <div>
+            <p class="ds-eyebrow">Your cookbook</p>
+            <h2 class="ds-dashboard__section-title">
+              {recipes.length} {recipeWord}
+            </h2>
+          </div>
+          <div class="ds-dashboard__actions">
+            <a class="btn btn-primary" href={addRecipeHref}>
+              <svg class="ds-btn__icon" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Add a recipe
+            </a>
+            <a class="btn btn-outline-primary" href={feedHref}>Browse the feed</a>
+          </div>
+        </div>
+
+        <ul class="ds-grid" role="list">
+          {recipes.map((r) => (
+            <li class="ds-card">
+              <a class="ds-card__link" href={`/recipe/${r.slug}`}>
+                <div class="ds-card__cover">
+                  <img src={r.cover.src} alt={r.cover.alt} loading="lazy" />
+                  <div class="ds-card__pills">
+                    <span class="ds-pill ds-pill--pink">{r.cuisine}</span>
+                    <span class="ds-pill ds-pill--teal">{r.cookTime}</span>
+                    {r.status === 'draft' && (
+                      <span class="ds-pill ds-pill--spice">Draft</span>
+                    )}
+                  </div>
+                </div>
+                <div class="ds-card__body">
+                  <h3 class="ds-card__title">{r.title}</h3>
+                  <p class="ds-card__meta">
+                    Serves {r.servings}
+                    {r.rating !== undefined && ` · ★ ${r.rating.toFixed(1)}`}
+                    {` · ${r.cooksTried} cooks tried`}
+                  </p>
+                  <p class="ds-card__excerpt">{r.excerpt}</p>
+                </div>
+              </a>
+              <div class="ds-card__actions">
+                <a class="btn btn-sm btn-outline-primary"
+                   href={`/recipe/${r.slug}/edit`}>Edit</a>
+                <div class="ds-card__stats">
+                  <span class="ds-card__stat" title={`${r.comments} comments`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round"
+                         stroke-linejoin="round" aria-hidden="true">
+                      <path d="M21 11.5a8 8 0 0 1-11.5 7.2L4 20l1.3-5.5A8 8 0 1 1 21 11.5Z" />
+                    </svg>
+                    {r.comments}
+                  </span>
+                  <span class="ds-card__stat" title={`${r.swaps} swaps`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.5" stroke-linecap="round"
+                         stroke-linejoin="round" aria-hidden="true">
+                      <path d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3" />
+                    </svg>
+                    {r.swaps}
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+  </div>
+</section>
+
+<style>
+  /* === Brand tokens (Brand Book §19.1) — re-declared so the component is
+     drop-in. If src/styles/tokens.css is loaded globally these duplicate
+     harmlessly at equal specificity. === */
+  :root {
+    --ds-teal: #3D717C;
+    --ds-teal-dark: #2A535C;
+    --ds-teal-light: #5A8E97;
+    --ds-teal-tint: #E5EDEF;
+    --ds-pink: #F9B7A4;
+    --ds-pink-soft: #FCE6DD;
+    --ds-spice: #E07A3B;
+    --ds-spice-soft: #F6E0CB;
+    --ds-cream: #FBF7F1;
+    --ds-oat: #EFE5D4;
+    --ds-ink: #2C2A28;
+    --ds-muted: #6B6661;
+    --ds-border: #E5DDD0;
+    --ds-font-serif: 'Playfair Display', Georgia, serif;
+    --ds-font-sans: 'Inter', system-ui, sans-serif;
+    --ds-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --ds-r-sm: 4px;
+    --ds-r-md: 10px;
+    --ds-r-lg: 18px;
+    --ds-r-pill: 999px;
+    --ds-shadow-sm: 0 1px 2px rgba(44, 42, 40, 0.06);
+    --ds-shadow-md: 0 4px 12px rgba(44, 42, 40, 0.08);
+    --ds-shadow-lg: 0 12px 32px rgba(44, 42, 40, 0.12);
+  }
+
+  /* === Dashboard shell === */
+  .ds-dashboard {
+    background: var(--ds-cream);
+    color: var(--ds-ink);
+    font-family: var(--ds-font-sans);
+    padding: 64px 0 96px;
+  }
+  .ds-dashboard__container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* === Header === */
+  .ds-dashboard__header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .ds-eyebrow {
+    font-family: var(--ds-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ds-spice);
+    margin: 0 0 12px;
+  }
+  .ds-dashboard__title {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+    margin: 0 0 16px;
+    color: var(--ds-ink);
+  }
+  .ds-dashboard__lead {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ds-muted);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* === Buttons — Bootstrap-style class names, brand-tinted (Brand Book §10) === */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--ds-font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    text-decoration: none;
+    padding: 10px 22px;
+    border-radius: var(--ds-r-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease,
+                color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn:hover { text-decoration: none; }
+  .btn-lg {
+    font-size: 17px;
+    padding: 14px 28px;
+    border-radius: var(--ds-r-lg);
+  }
+  .btn-sm {
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: var(--ds-r-md);
+  }
+  .btn-primary {
+    background: var(--ds-teal);
+    color: #fff;
+    border-color: var(--ds-teal);
+  }
+  .btn-primary:hover {
+    background: var(--ds-teal-dark);
+    border-color: var(--ds-teal-dark);
+    color: #fff;
+  }
+  .btn-spice {
+    background: var(--ds-spice);
+    color: #fff;
+    border-color: var(--ds-spice);
+    box-shadow: var(--ds-shadow-md);
+  }
+  .btn-spice:hover {
+    background: #c66832;
+    border-color: #c66832;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .btn-outline-primary {
+    background: transparent;
+    color: var(--ds-teal);
+    border-color: var(--ds-teal);
+  }
+  .btn-outline-primary:hover {
+    background: var(--ds-teal-tint);
+    color: var(--ds-teal-dark);
+    border-color: var(--ds-teal-dark);
+  }
+  .ds-btn__icon {
+    width: 1.1em;
+    height: 1.1em;
+    flex: 0 0 auto;
+  }
+
+  /* === Empty state === */
+  .ds-empty {
+    display: flex;
+    justify-content: center;
+  }
+  .ds-empty__card {
+    background: var(--ds-oat);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-r-lg);
+    padding: 64px 48px;
+    text-align: center;
+    max-width: 640px;
+    width: 100%;
+    box-shadow: var(--ds-shadow-sm);
+  }
+  .ds-empty__art {
+    color: var(--ds-teal);
+    margin: 0 auto 24px;
+    width: 96px;
+    height: 96px;
+  }
+  .ds-empty__art svg { width: 100%; height: 100%; }
+  .ds-empty__title {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.10;
+    margin: 0 0 16px;
+    color: var(--ds-ink);
+  }
+  .ds-empty__text {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ds-muted);
+    margin: 0 auto 32px;
+    max-width: 480px;
+  }
+  .ds-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .ds-empty__hint {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ds-muted);
+    margin: 0 auto;
+    max-width: 480px;
+  }
+  .ds-mono {
+    font-family: var(--ds-font-mono);
+    font-weight: 500;
+    color: var(--ds-spice);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+  }
+
+  /* === Populated state — toolbar === */
+  .ds-dashboard__toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--ds-border);
+    margin-bottom: 32px;
+  }
+  .ds-dashboard__section-title {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.10;
+    margin: 4px 0 0;
+    color: var(--ds-ink);
+  }
+  .ds-dashboard__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* === Recipe grid (Brand Book §11 — three-up cuisine row pattern) === */
+  .ds-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+  }
+
+  /* === Recipe card === */
+  .ds-card {
+    background: #fff;
+    border: 1px solid var(--ds-border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .ds-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--ds-shadow-md);
+  }
+  .ds-card__link {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .ds-card__link:hover { text-decoration: none; color: inherit; }
+  .ds-card__cover {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--ds-oat);
+  }
+  .ds-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 200ms ease;
+  }
+  .ds-card:hover .ds-card__cover img { transform: scale(1.03); }
+  .ds-card__pills {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .ds-pill {
+    font-family: var(--ds-font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: var(--ds-r-pill);
+  }
+  .ds-pill--pink {
+    background: var(--ds-pink);
+    color: var(--ds-ink);
+  }
+  .ds-pill--teal {
+    background: var(--ds-teal);
+    color: #fff;
+  }
+  .ds-pill--spice {
+    background: var(--ds-spice);
+    color: #fff;
+  }
+  .ds-card__body {
+    padding: 18px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ds-card__title {
+    font-family: var(--ds-font-serif);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--ds-ink);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ds-card__meta {
+    font-family: var(--ds-font-mono);
+    font-feature-settings: 'tnum' 1;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ds-muted);
+    margin: 0;
+  }
+  .ds-card__excerpt {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ds-muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ds-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--ds-border);
+    margin-top: auto;
+  }
+  .ds-card__stats {
+    display: flex;
+    gap: 14px;
+    color: var(--ds-muted);
+  }
+  .ds-card__stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--ds-font-mono);
+    font-feature-settings: 'tnum' 1;
+    font-size: 12px;
+  }
+  .ds-card__stat svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* === Responsive — Brand Book §9 breakpoints === */
+  @media (max-width: 575.98px) {
+    .ds-dashboard { padding: 40px 0 64px; }
+    .ds-dashboard__container { padding: 0 16px; }
+    .ds-dashboard__header { margin-bottom: 40px; }
+    .ds-empty__card { padding: 40px 24px; }
+    .ds-empty__actions .btn,
+    .ds-dashboard__actions .btn {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+    .ds-dashboard__toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .ds-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  /* === Dark mode — Brand Book §19.4
+     Teal, pink, spice stay fixed; only the neutrals invert. === */
+  @media (prefers-color-scheme: dark) {
+    .ds-dashboard {
+      background: #1F1D1B;
+      color: #F5EFE3;
+    }
+    .ds-dashboard__title,
+    .ds-dashboard__section-title,
+    .ds-empty__title,
+    .ds-card__title { color: #F5EFE3; }
+    .ds-empty__card {
+      background: #2C2A28;
+      border-color: #3A3733;
+    }
+    .ds-card {
+      background: #2C2A28;
+      border-color: #3A3733;
+    }
+    .ds-card__actions { border-top-color: #3A3733; }
+  }
+</style>
